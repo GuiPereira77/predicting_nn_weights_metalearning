@@ -1,10 +1,12 @@
+import os, sys, json
 from neuralforecast import NeuralForecast
 from neuralforecast.models import MLP
 from utilsforecast.evaluation import evaluate
 from utilsforecast.losses import smape
 
-from src.callbacks.weights import WeightsPrinterCallback
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
+from src.callbacks.weights import WeightsPrinterCallback
 from src.utils.load_data.config import DATASETS, DATA_GROUPS
 
 # ---- data loading and partitioning
@@ -16,9 +18,9 @@ df, horizon, n_lags, freq_str, freq_int = data_loader.load_everything(group)
 
 train, test = data_loader.train_test_split(df, horizon=horizon)
 
+# ---- model training
 wp_cb = WeightsPrinterCallback()
 
-# models = [MLP(input_size=horizon, h=horizon, callbacks=[augmentation_cb])]
 models = [MLP(input_size=n_lags,
               h=horizon,
               num_layers=3,
@@ -33,5 +35,46 @@ fcst = nf.predict()
 
 cv = fcst.merge(test, on=['unique_id', 'ds'])
 
-scores_df = evaluate(df=cv, models=['MLP'], metrics=[smape])
-scores_df.mean(numeric_only=True)
+# ---- evaluate models
+metrics = [smape]
+scores = {}
+
+for model in models:
+    model_name = model.__class__.__name__
+    scores[model_name] = {}
+    for metric in metrics:
+        metric_name = metric.__name__
+        scores_df = evaluate(df=cv, models=[model_name], metrics=[metric])
+        scores[model_name][metric_name] = scores_df.mean(numeric_only=True)[model_name]
+
+smape_mean_score = scores['MLP']['smape']
+
+# ---- create model statistics dictionary
+results = {}
+for model in models:
+    key = f"{model}_{data_name}_{group}"
+    results[key] = {
+        'dataset': {
+            'name': data_name,
+            'group': group,
+        },
+        'model': {
+            'name': model.__class__.__name__,
+            'input_size': model.input_size,
+            'horizon': model.h,
+            'num_layers': model.num_layers,
+            'hidden_size': model.hidden_size,
+            'max_steps': model.max_steps,
+        },
+        'scores': scores[model.__class__.__name__],
+        'weights': wp_cb.stats
+    }
+
+# ---- save results to a JSON file
+output_dir = './scripts/experiments'
+
+# Write the results to a JSON file
+output_file = os.path.join(output_dir, 'model_stats.json')
+with open(output_file, 'w') as f:
+    json.dump(results, f, indent=4)
+
