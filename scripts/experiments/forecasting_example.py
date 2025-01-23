@@ -21,8 +21,8 @@ wp_cb = WeightsPrinterCallback()
 # models = [MLP(input_size=horizon, h=horizon, callbacks=[augmentation_cb])]
 models = [MLP(input_size=n_lags,
               h=horizon,
-              num_layers=1,
-              hidden_size=16,
+              num_layers=3,
+              hidden_size=8,
               accelerator='cpu',
               callbacks=[wp_cb],
               max_steps=5)]
