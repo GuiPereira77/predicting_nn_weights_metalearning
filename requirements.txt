@@ -4,3 +4,5 @@ neuralforecast==2.0.1
 numpy==1.26.4
 pandas==2.2.3
 utilsforecast==0.2.11
+scikit-learn==1.6.1
+torch==2.5.1
