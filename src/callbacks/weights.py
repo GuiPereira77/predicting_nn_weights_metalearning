@@ -11,7 +11,6 @@ class WeightsPrinterCallback(pl.Callback):
         # self._print_weights(pl_module)
         self._evaluate_weights(pl_module)
 
-
     def _print_weights(self, pl_module):
         state_dict = pl_module.state_dict()
         for name, tensor in state_dict.items():
