@@ -40,21 +40,21 @@ for data_name, group in DATA_GROUPS:
         sys.exit(1)
 
     # ---- Hyperparameter Combinations using itertools.product ----
-    num_layers_list = [1, 2, 3, 5, 8, 12]   # Example choices for num_layers
+    # num_layers_list = [1, 2, 3, 5, 8, 12]   # Example choices for num_layers
     hidden_size_list = [4, 8, 12, 16, 20, 24]  # Example choices for hidden_size
     max_steps_list = [100, 200, 300, 500]  # Example choices for max_steps
 
     # Generate all possible combinations of the hyperparameters
-    hyperparameter_combinations = product(num_layers_list, hidden_size_list, max_steps_list)
+    hyperparameter_combinations = product(hidden_size_list, max_steps_list)
 
     # ---- Model Training for Different Hyperparameter Combinations ----
-    for num_layers, hidden_size, max_steps in hyperparameter_combinations:
+    for hidden_size, max_steps in hyperparameter_combinations:
         # Create a new MLP model with the current hyperparameters
         wp_cb = WeightsPrinterCallback()
         model = MLP(
             input_size=n_lags,
             h=horizon,
-            num_layers=num_layers,
+            num_layers=3,
             hidden_size=hidden_size,
             accelerator=device,
             callbacks=[wp_cb],
@@ -62,13 +62,13 @@ for data_name, group in DATA_GROUPS:
         )
 
         try:
-            logger.info(f"Starting model training with num_layers={num_layers}, hidden_size={hidden_size}, max_steps={max_steps}...")
+            logger.info(f"Starting model training with hidden_size={hidden_size}, max_steps={max_steps}...")
             nf = NeuralForecast(models=[model], freq=freq_str)
             nf.fit(df=train)
             fcst = nf.predict()
-            logger.info(f"Model training completed for num_layers={num_layers}, hidden_size={hidden_size}, max_steps={max_steps}.")
+            logger.info(f"Model training completed for hidden_size={hidden_size}, max_steps={max_steps}.")
         except Exception as e:
-            logger.error(f"Error during training with num_layers={num_layers}, hidden_size={hidden_size}, max_steps={max_steps}: {e}")
+            logger.error(f"Error during training with hidden_size={hidden_size}, max_steps={max_steps}: {e}")
             continue
 
         # TODO: Add training loss calculation
@@ -93,7 +93,7 @@ for data_name, group in DATA_GROUPS:
         logger.info(f"Evaluation completed. SMAPE Score: {scores['smape']}")
 
         # ---- Create Model Statistics Dictionary ----
-        key = f"{data_name}_{group}_num_layers_{num_layers}_hidden_size_{hidden_size}_max_steps_{max_steps}"
+        key = f"{data_name}_{group}_hidden_size_{hidden_size}_max_steps_{max_steps}"
         results[key] = {
             "dataset": {
                 "name": data_name,

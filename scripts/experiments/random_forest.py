@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_absolute_error
+import sys
 
 # Load JSON file
 with open("scripts/experiments/model_stats.json", "r") as f:
@@ -37,9 +38,6 @@ for model_name, details in data.items():
     records.append(record)
 
 df = pd.DataFrame(records)
-print(df.shape)
-# print(df.columns)
-# print(df.head())
 
 # Store the DataFrame in a CSV file
 df.to_csv("scripts/experiments/model_stats.csv", index=False)
@@ -58,16 +56,37 @@ y = df["smape"]  # Target variable
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# model = RandomForestRegressor(n_estimators=200, random_state=42)
-model = GradientBoostingRegressor(n_estimators=200, random_state=42)
+model = RandomForestRegressor(n_estimators=200, random_state=42)
+# model = GradientBoostingRegressor(n_estimators=200, random_state=42)
 model.fit(X_train, y_train)
 
 # Predict and evaluate
 y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 
-print(f"\nMean Absolute Error (MAE) of SMAPE predictions: {mae:.4f}")
-
 # Show feature importance
 feature_importance = pd.DataFrame({"Feature": X.columns, "Importance": model.feature_importances_})
+
+# Save model details, predictions, and feature importance to a log file
+# Redirect stdout to a file
+log_file = "scripts/experiments/output.log"
+sys.stdout = open(log_file, "w")
+
+print("Dataframe Info:")
+print(df.info())
+
+# Print model details
+print("\nModel Details:")
+print(model)
+
+print("\nModel Parameters:")
+print(model.get_params())
+
+print(f"\nMean Absolute Error (MAE) of SMAPE predictions: {mae:.4f}")
 print("\nFeature Importance:\n", feature_importance.sort_values(by="Importance", ascending=False).to_string())
+
+# Reset stdout back to default
+sys.stdout.close()
+sys.stdout = sys.__stdout__
+
+print("Model info saved to:", log_file)
