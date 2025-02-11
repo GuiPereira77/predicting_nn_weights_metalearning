@@ -79,6 +79,15 @@ sys.stdout = open(log_file, "w")
 print("Dataframe Info:")
 print(df.info())
 
+print(f"\nInput Size: {df['input_size'].unique()}")
+print(f"Horizon: {df['horizon'].unique()}")
+print(f"Num Layers: {df['num_layers'].unique()}")
+print(f"Hidden Size: {df['hidden_size'].unique()}")
+print(f"Max Steps: {df['max_steps'].unique()}")
+print(f"Learning Rate: {df['learning_rate'].unique()}")
+print(f"Batch Size: {df['batch_size'].unique()}")
+print(f"Scaler Type: {df['scaler_type'].unique()}")
+
 # Print model details
 print("\nModel Details:")
 print(model)
