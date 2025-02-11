@@ -4,9 +4,11 @@ import json
 import logging
 import torch
 import copy
+import pandas as pd
 from itertools import product
 from neuralforecast import NeuralForecast
 from neuralforecast.models import MLP
+from statsforecast.models import Naive
 from utilsforecast.evaluation import evaluate
 from utilsforecast.losses import smape
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
@@ -23,9 +25,22 @@ logger = logging.getLogger(__name__)
 # ---- Detect GPU availability ----
 device = "gpu" if torch.cuda.is_available() else "cpu"
 logger.info(f"Using device: {device.upper()}")
+if device == "gpu":
+    logger.info(f"GPU: {torch.cuda.get_device_name()}")
+    torch.set_float32_matmul_precision('high')  # Options: 'high', 'medium', or 'default'
+
+# ---- Variables ----
+# ---- Hyperparameter Combinations using itertools.product ----
+HIDDEN_SIZE_LIST = [8, 16]#, 32, 64]  # Number of units in each hidden layer
+MAX_STEPS_LIST = [50, 100, 200]#, 500, 1000]  # Maximum number of training steps
+NUM_LAYERS_LIST = [3]  # Number of hidden layers
+LEARNING_RATE_LIST = [1e-3, 5e-4, 1e-4]  # Learning rate
+BATCH_SIZE_LIST = [32, 64]#, 128]  # Batch size for training
+SCALER_TYPE_LIST = ['identity']#, 'standard', 'robust']  # Type of scaler for normalization
 
 results = {}
 
+# ---- Model Training for Different Data Groups ----
 for data_name, group in DATA_GROUPS:
     # ---- Data Loading and Preparation ----
     try:
@@ -39,39 +54,64 @@ for data_name, group in DATA_GROUPS:
         logger.error(f"Error loading data: {e}")
         sys.exit(1)
 
-    # ---- Hyperparameter Combinations using itertools.product ----
-    # num_layers_list = [1, 2, 3, 5, 8, 12]   # Example choices for num_layers
-    hidden_size_list = [4, 8, 12, 16, 20, 24]  # Example choices for hidden_size
-    max_steps_list = [100, 200, 300, 500]  # Example choices for max_steps
+    # try:
+    #     # ---- Compute Naive Baseline ----
+    #     logger.info("Computing Naive model...")
+    #     naive_model = Naive()
+    #     naive_model = naive_model.fit(train['y'].values)
+    #     naive_forecast = naive_model.predict(h=horizon, freq=freq_str)
 
-    # Generate all possible combinations of the hyperparameters
-    hyperparameter_combinations = product(hidden_size_list, max_steps_list)
+    #     # Convert the forecast dictionary to a DataFrame for easier merging
+    #     naive_forecast_df = pd.DataFrame({
+    #         'unique_id': train['unique_id'].unique()[0],
+    #         'ds': pd.date_range(start=train['ds'].max(), periods=horizon + 1, freq=freq_str)[1:],
+    #         'Naive': naive_forecast['mean']
+    #     })
+
+    #     sn_cv = test.merge(naive_forecast_df, on=['unique_id', 'ds'])
+
+    #     # Compute SMAPE for Naive model
+    #     naive_smape_score = float(evaluate(df=sn_cv, models=['Naive'], metrics=[smape])
+    #                               .mean(numeric_only=True)['Naive'])
+    #     logger.info(f"Naive SMAPE Score: {naive_smape_score}")
+    # except Exception as e:
+    #     logger.error(f"Error computing Naive model: {e}")
+    #     sys.exit(1)
+
+
+    # ---- Generate all possible combinations of the hyperparameters ----
+    hyperparameter_combinations = product(
+        HIDDEN_SIZE_LIST,MAX_STEPS_LIST,NUM_LAYERS_LIST,LEARNING_RATE_LIST,BATCH_SIZE_LIST,SCALER_TYPE_LIST
+        )
 
     # ---- Model Training for Different Hyperparameter Combinations ----
-    for hidden_size, max_steps in hyperparameter_combinations:
+    for hidden_size, max_steps, num_layers, learning_rate, batch_size, scaler_type in hyperparameter_combinations:
         # Create a new MLP model with the current hyperparameters
         wp_cb = WeightsPrinterCallback()
         model = MLP(
             input_size=n_lags,
             h=horizon,
-            num_layers=3,
+            num_layers=num_layers,
             hidden_size=hidden_size,
             accelerator=device,
             callbacks=[wp_cb],
             max_steps=max_steps,
+            learning_rate=learning_rate,
+            batch_size=batch_size,
+            scaler_type=scaler_type,
         )
 
         try:
-            logger.info(f"Starting model training with hidden_size={hidden_size}, max_steps={max_steps}...")
+            logger.info(f"Starting model training with hidden_size={hidden_size}, max_steps={max_steps}, "
+                        f"learning_rate={learning_rate}, batch_size={batch_size}, scaler_type={scaler_type}")
             nf = NeuralForecast(models=[model], freq=freq_str)
             nf.fit(df=train)
             fcst = nf.predict()
-            logger.info(f"Model training completed for hidden_size={hidden_size}, max_steps={max_steps}.")
+            logger.info(f"Model training completed.")
         except Exception as e:
-            logger.error(f"Error during training with hidden_size={hidden_size}, max_steps={max_steps}: {e}")
+            logger.error(f"Error during training with hidden_size={hidden_size}, max_steps={max_steps}, "
+                         f"learning_rate={learning_rate}, batch_size={batch_size}, scaler_type={scaler_type}: {e}")
             continue
-
-        # TODO: Add training loss calculation
 
         cv = fcst.merge(test, on=['unique_id', 'ds'])
 
@@ -87,13 +127,16 @@ for data_name, group in DATA_GROUPS:
             'smape': smape_score,
             'mse': mse_score,
             'mae': mae_score,
-            'r2_score': r2_score_val
+            'r2_score': r2_score_val,
+            # 'sn_smape': sn_smape_score,
+            # 'is_better': smape_score < sn_smape_score
         }
 
         logger.info(f"Evaluation completed. SMAPE Score: {scores['smape']}")
 
         # ---- Create Model Statistics Dictionary ----
-        key = f"{data_name}_{group}_hidden_size_{hidden_size}_max_steps_{max_steps}"
+        key = f"{data_name}_{group}_hidden_size_{hidden_size}_max_steps_{max_steps}_learning_rate_{learning_rate}_" \
+                f"batch_size_{batch_size}_scaler_type_{scaler_type}"
         results[key] = {
             "dataset": {
                 "name": data_name,
@@ -106,12 +149,16 @@ for data_name, group in DATA_GROUPS:
                 "num_layers": model.num_layers,
                 "hidden_size": model.hidden_size,
                 "max_steps": model.max_steps,
+                "learning_rate": model.learning_rate,
+                "batch_size": model.batch_size,
+                "scaler_type": scaler_type,
                 "total_params": sum(p.numel() for p in model.parameters()),
             },
             "scores": scores,
-            # "training_loss": training_loss,
             "weights": copy.deepcopy(wp_cb.stats),
         }
+
+        logger.info(f"Model statistics dictionary created for {key}")
 
     # ---- Save Results to JSON File ----
     output_dir = "./scripts/experiments"
