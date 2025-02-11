@@ -30,8 +30,8 @@ class GluontsDataset(LoadDataset):
     }
 
     frequency_pd = {
-        'm1_quarterly': 'Q',
-        'm1_monthly': 'M',
+        'm1_quarterly': 'QE',
+        'm1_monthly': 'ME',
     }
 
     data_group = [*horizons_map]
