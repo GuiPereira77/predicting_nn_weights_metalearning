@@ -23,6 +23,9 @@ for model_name, details in data.items():
         "num_layers": details["model"]["num_layers"],
         "hidden_size": details["model"]["hidden_size"],
         "max_steps": details["model"]["max_steps"],
+        "learning_rate": details["model"]["learning_rate"],
+        "batch_size": details["model"]["batch_size"],
+        "scaler_type": details["model"]["scaler_type"],
         "total_params": details["model"]["total_params"],
         "smape": details["scores"]["smape"],  # Target variable
     }
@@ -46,6 +49,7 @@ df.to_csv("scripts/experiments/model_stats.csv", index=False)
 encoder = LabelEncoder()
 df["dataset_name"] = encoder.fit_transform(df["dataset_name"])
 df["dataset_group"] = encoder.fit_transform(df["dataset_group"])
+df["scaler_type"] = encoder.fit_transform(df["scaler_type"])
 
 # Handle missing values
 df.fillna(0, inplace=True)
