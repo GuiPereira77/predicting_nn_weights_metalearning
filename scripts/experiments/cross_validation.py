@@ -1,8 +1,8 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score, KFold
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, make_scorer
 import sys
 
 # Convert JSON to CSV
@@ -22,27 +22,37 @@ df["scaler_type"] = encoder.fit_transform(df["scaler_type"])
 # Handle missing values
 df.fillna(0, inplace=True)
 
-# Split data
+# Prepare data
 X = df.drop(columns=["id", "smape", "is_better"])  # Features: model parameters + weight stats
 target = "is_better"  # "smape" or "is_better"
 y = df[target]  # Target: SMAPE scores or binary classification
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
+# Define the model
 model = RandomForestRegressor(n_estimators=200, random_state=42)
-# model = GradientBoostingRegressor(n_estimators=200, random_state=42)
-model.fit(X_train, y_train)
 
-# Predict and evaluate
-y_pred = model.predict(X_test)
-mae = mean_absolute_error(y_test, y_pred)
+# Define cross-validation strategy
+cv = KFold(n_splits=10, shuffle=True, random_state=42)  # 5-fold cross-validation
+
+# Define scoring metric (MAE in this case)
+scoring = make_scorer(mean_absolute_error)
+
+# Perform cross-validation
+cv_scores = cross_val_score(model, X, y, cv=cv, scoring=scoring)
+
+# Print cross-validation results
+print(f"Cross-validation MAE scores: {cv_scores}")
+print(f"Mean MAE: {cv_scores.mean():.4f}")
+print(f"Standard deviation of MAE: {cv_scores.std():.4f}")
+
+# Fit the model on the entire dataset to get feature importance
+model.fit(X, y)
 
 # Show feature importance
 feature_importance = pd.DataFrame({"Feature": X.columns, "Importance": model.feature_importances_})
 
 # Save model details, predictions, and feature importance to a log file
 # Redirect stdout to a file
-log_file = "scripts/experiments/random_forest.log"
+log_file = "scripts/experiments/cross_validation.log"
 sys.stdout = open(log_file, "w")
 
 print("Dataframe Info:")
@@ -64,7 +74,10 @@ print(model)
 print("\nModel Parameters:")
 print(model.get_params())
 
-print(f"\nMean Absolute Error (MAE) of '{target.upper()}' predictions: {mae:.4f}")
+print("\nCross-validation MAE scores:", cv_scores)
+print(f"Mean MAE: {cv_scores.mean():.4f}")
+print(f"Standard deviation of MAE: {cv_scores.std():.4f}")
+
 print("\nFeature Importance:\n", feature_importance.sort_values(by="Importance", ascending=False).to_string())
 
 # Reset stdout back to default
