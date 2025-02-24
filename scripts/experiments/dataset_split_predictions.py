@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 import numpy as np
 import sys
@@ -7,44 +6,13 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report
 
-# Load JSON file
-with open("scripts/experiments/model_stats.json", "r") as f:
-    data = json.load(f)
+# Convert JSON to CSV
+file_to_run = "scripts/experiments/json_to_csv.py"
+with open(file_to_run, "r") as file:
+    exec(file.read())
 
-# Convert JSON into structured DataFrame
-records = []
-for model_name, details in data.items():
-    record = {
-        "id": model_name,
-        "dataset_name": details["dataset"]["name"],
-        "dataset_group": details["dataset"]["group"],
-        "input_size": details["model"]["input_size"],
-        "horizon": details["model"]["horizon"],
-        "num_layers": details["model"]["num_layers"],
-        "hidden_size": details["model"]["hidden_size"],
-        "max_steps": details["model"]["max_steps"],
-        "learning_rate": details["model"]["learning_rate"],
-        "batch_size": details["model"]["batch_size"],
-        "scaler_type": details["model"]["scaler_type"],
-        "total_params": details["model"]["total_params"],
-        "smape": details["scores"]["smape"],
-        "is_better": details["scores"]["is_better"]
-    }
-
-    # Extract weight statistics for each layer
-    for layer, weights in details["weights"].items():
-        record[f"{layer}_mean"] = weights["mean"]
-        record[f"{layer}_median"] = weights["median"]
-        record[f"{layer}_std"] = weights["std"]
-        record[f"{layer}_max"] = weights["max"]
-        record[f"{layer}_min"] = weights["min"]
-
-    records.append(record)
-
-df = pd.DataFrame(records)
-
-# Store the DataFrame in a CSV file
-df.to_csv("scripts/experiments/model_stats.csv", index=False)
+# Load CSV file
+df = pd.read_csv("scripts/experiments/model_stats.csv")
 
 # Encode categorical variables
 encoder = LabelEncoder()
@@ -96,7 +64,7 @@ feature_importance_df = pd.DataFrame({"Feature": X.columns, "Importance": avg_fe
 feature_importance_df = feature_importance_df.sort_values(by="Importance", ascending=False)
 
 # Save results to log file
-log_file = "scripts/experiments/output.log"
+log_file = "scripts/experiments/dataset_split_predictions.log"
 sys.stdout = open(log_file, "w")
 
 print("Dataframe Info:")
