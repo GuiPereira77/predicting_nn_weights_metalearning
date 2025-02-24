@@ -8,7 +8,8 @@ import pandas as pd
 from itertools import product
 from neuralforecast import NeuralForecast
 from neuralforecast.models import MLP
-from statsforecast.models import Naive
+from statsforecast import StatsForecast
+from statsforecast.models import SeasonalNaive
 from utilsforecast.evaluation import evaluate
 from utilsforecast.losses import smape
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
@@ -31,12 +32,12 @@ if device == "gpu":
 
 # ---- Variables ----
 # ---- Hyperparameter Combinations using itertools.product ----
-HIDDEN_SIZE_LIST = [8, 16]#, 32, 64]  # Number of units in each hidden layer
-MAX_STEPS_LIST = [50, 100, 200]#, 500, 1000]  # Maximum number of training steps
+HIDDEN_SIZE_LIST = [8, 16, 32, 64]  # Number of units in each hidden layer
+MAX_STEPS_LIST = [100, 200, 500, 1000]  # Maximum number of training steps
 NUM_LAYERS_LIST = [3]  # Number of hidden layers
 LEARNING_RATE_LIST = [1e-3, 5e-4, 1e-4]  # Learning rate
-BATCH_SIZE_LIST = [32, 64]#, 128]  # Batch size for training
-SCALER_TYPE_LIST = ['identity']#, 'standard', 'robust']  # Type of scaler for normalization
+BATCH_SIZE_LIST = [32, 64, 128]  # Batch size for training
+SCALER_TYPE_LIST = ['identity', 'standard', 'robust']  # Type of scaler for normalization
 
 results = {}
 
@@ -54,30 +55,23 @@ for data_name, group in DATA_GROUPS:
         logger.error(f"Error loading data: {e}")
         sys.exit(1)
 
-    # try:
-    #     # ---- Compute Naive Baseline ----
-    #     logger.info("Computing Naive model...")
-    #     naive_model = Naive()
-    #     naive_model = naive_model.fit(train['y'].values)
-    #     naive_forecast = naive_model.predict(h=horizon, freq=freq_str)
+    # ---- Model Training for Seasonal Naive ----
+    try:
+        logger.info("Starting Seasonal Naive model training")
+        sf = StatsForecast(
+            models=[SeasonalNaive(season_length=freq_int)],
+            freq=freq_str
+        )
 
-    #     # Convert the forecast dictionary to a DataFrame for easier merging
-    #     naive_forecast_df = pd.DataFrame({
-    #         'unique_id': train['unique_id'].unique()[0],
-    #         'ds': pd.date_range(start=train['ds'].max(), periods=horizon + 1, freq=freq_str)[1:],
-    #         'Naive': naive_forecast['mean']
-    #     })
+        sf.fit(df=train)
+        sfdf = sf.predict(h=horizon)
+        sfdf = sfdf.merge(test, on=['unique_id', 'ds'])
+        sn_smape_score = float(evaluate(df=sfdf, models=['SeasonalNaive'], metrics=[smape]).mean(numeric_only=True)['SeasonalNaive'])
 
-    #     sn_cv = test.merge(naive_forecast_df, on=['unique_id', 'ds'])
-
-    #     # Compute SMAPE for Naive model
-    #     naive_smape_score = float(evaluate(df=sn_cv, models=['Naive'], metrics=[smape])
-    #                               .mean(numeric_only=True)['Naive'])
-    #     logger.info(f"Naive SMAPE Score: {naive_smape_score}")
-    # except Exception as e:
-    #     logger.error(f"Error computing Naive model: {e}")
-    #     sys.exit(1)
-
+        logger.info("Seasonal Naive model training completed.")
+    except Exception as e:
+        logger.error(f"Error during Seasonal Naive model training: {e}")
+        sys.exit(1)
 
     # ---- Generate all possible combinations of the hyperparameters ----
     hyperparameter_combinations = product(
@@ -103,7 +97,7 @@ for data_name, group in DATA_GROUPS:
 
         try:
             logger.info(f"Starting model training with hidden_size={hidden_size}, max_steps={max_steps}, "
-                        f"learning_rate={learning_rate}, batch_size={batch_size}, scaler_type={scaler_type}")
+                         f"learning_rate={learning_rate}, batch_size={batch_size}, scaler_type={scaler_type}")
             nf = NeuralForecast(models=[model], freq=freq_str)
             nf.fit(df=train)
             fcst = nf.predict()
@@ -113,7 +107,7 @@ for data_name, group in DATA_GROUPS:
                          f"learning_rate={learning_rate}, batch_size={batch_size}, scaler_type={scaler_type}: {e}")
             continue
 
-        cv = fcst.merge(test, on=['unique_id', 'ds'])
+        cv = fcst.merge(sfdf, on=['unique_id', 'ds'])
 
         # ---- Model Evaluation ----
         # Metrics calculation
@@ -128,11 +122,13 @@ for data_name, group in DATA_GROUPS:
             'mse': mse_score,
             'mae': mae_score,
             'r2_score': r2_score_val,
-            # 'sn_smape': sn_smape_score,
-            # 'is_better': smape_score < sn_smape_score
+            'sn_smape': sn_smape_score,
+            'is_better': smape_score < sn_smape_score
         }
 
         logger.info(f"Evaluation completed. SMAPE Score: {scores['smape']}")
+        logger.info(f"SN SMAPE Score: {scores['sn_smape']}")
+        logger.info(f"Is the MLP model better than the Seasonal Naive model? {scores['is_better']}")
 
         # ---- Create Model Statistics Dictionary ----
         key = f"{data_name}_{group}_hidden_size_{hidden_size}_max_steps_{max_steps}_learning_rate_{learning_rate}_" \

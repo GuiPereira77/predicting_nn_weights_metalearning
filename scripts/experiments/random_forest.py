@@ -27,7 +27,8 @@ for model_name, details in data.items():
         "batch_size": details["model"]["batch_size"],
         "scaler_type": details["model"]["scaler_type"],
         "total_params": details["model"]["total_params"],
-        "smape": details["scores"]["smape"],  # Target variable
+        "smape": details["scores"]["smape"],
+        "is_better": details["scores"]["is_better"]
     }
 
     # Extract weight statistics for each layer
@@ -55,8 +56,9 @@ df["scaler_type"] = encoder.fit_transform(df["scaler_type"])
 df.fillna(0, inplace=True)
 
 # Split data
-X = df.drop(columns=["id", "smape"])  # Features: model parameters + weight stats
-y = df["smape"]  # Target variable
+X = df.drop(columns=["id", "smape", "is_better"])  # Features: model parameters + weight stats
+target = "is_better"  # "smape" or "is_better"
+y = df[target]  # Target: SMAPE scores or binary classification
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -95,7 +97,7 @@ print(model)
 print("\nModel Parameters:")
 print(model.get_params())
 
-print(f"\nMean Absolute Error (MAE) of SMAPE predictions: {mae:.4f}")
+print(f"\nMean Absolute Error (MAE) of {target.upper()} predictions: {mae:.4f}")
 print("\nFeature Importance:\n", feature_importance.sort_values(by="Importance", ascending=False).to_string())
 
 # Reset stdout back to default
