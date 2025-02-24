@@ -31,7 +31,7 @@ y = df[target]  # Target: SMAPE scores or binary classification
 model = RandomForestRegressor(n_estimators=200, random_state=42)
 
 # Define cross-validation strategy
-cv = KFold(n_splits=10, shuffle=True, random_state=42)  # 5-fold cross-validation
+cv = KFold(n_splits=5, shuffle=True, random_state=42)  # 5-fold cross-validation
 
 # Define scoring metric (MAE in this case)
 scoring = make_scorer(mean_absolute_error)
@@ -52,7 +52,7 @@ feature_importance = pd.DataFrame({"Feature": X.columns, "Importance": model.fea
 
 # Save model details, predictions, and feature importance to a log file
 # Redirect stdout to a file
-log_file = "scripts/experiments/cross_validation.log"
+log_file = "scripts/experiments/cross_validation.txt"
 sys.stdout = open(log_file, "w")
 
 print("Dataframe Info:")

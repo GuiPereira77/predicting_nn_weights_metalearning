@@ -42,7 +42,7 @@ feature_importance = pd.DataFrame({"Feature": X.columns, "Importance": model.fea
 
 # Save model details, predictions, and feature importance to a log file
 # Redirect stdout to a file
-log_file = "scripts/experiments/random_forest.log"
+log_file = "scripts/experiments/random_forest.txt"
 sys.stdout = open(log_file, "w")
 
 print("Dataframe Info:")

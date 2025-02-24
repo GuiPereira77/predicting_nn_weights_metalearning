@@ -64,7 +64,7 @@ feature_importance_df = pd.DataFrame({"Feature": X.columns, "Importance": avg_fe
 feature_importance_df = feature_importance_df.sort_values(by="Importance", ascending=False)
 
 # Save results to log file
-log_file = "scripts/experiments/dataset_split_predictions.log"
+log_file = "scripts/experiments/dataset_split_predictions.txt"
 sys.stdout = open(log_file, "w")
 
 print("Dataframe Info:")
