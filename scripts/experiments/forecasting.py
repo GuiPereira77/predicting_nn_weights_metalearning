@@ -32,6 +32,7 @@ if device == "gpu":
 
 # ---- Variables ----
 # ---- Hyperparameter Combinations using itertools.product ----
+# Fix max_steps to 1000 for now, increase num hyperparameters
 HIDDEN_SIZE_LIST = [8, 16, 32, 64]  # Number of units in each hidden layer
 MAX_STEPS_LIST = [100, 200, 500, 1000]  # Maximum number of training steps
 NUM_LAYERS_LIST = [3]  # Number of hidden layers

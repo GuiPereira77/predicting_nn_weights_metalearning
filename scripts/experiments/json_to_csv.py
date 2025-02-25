@@ -36,6 +36,7 @@ for model_name, details in data.items():
     records.append(record)
 
 df = pd.DataFrame(records)
+print(df["is_better"].value_counts(normalize=True))
 
 # Store the DataFrame in a CSV file
 df.to_csv("scripts/experiments/model_stats.csv", index=False)

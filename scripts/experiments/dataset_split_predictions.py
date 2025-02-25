@@ -14,29 +14,32 @@ with open(file_to_run, "r") as file:
 # Load CSV file
 df = pd.read_csv("scripts/experiments/model_stats.csv")
 
+# Create unique group identifier for dataset_name & dataset_group
+df["dataset_group_id"] = df["dataset_name"].astype(str) + "_" + df["dataset_group"].astype(str)
+
 # Encode categorical variables
 encoder = LabelEncoder()
 df["dataset_name"] = encoder.fit_transform(df["dataset_name"])
 df["dataset_group"] = encoder.fit_transform(df["dataset_group"])
+df["dataset_group_id"] = encoder.fit_transform(df["dataset_group_id"])
 df["scaler_type"] = encoder.fit_transform(df["scaler_type"])
 
 # Handle missing values
 df.fillna(0, inplace=True)
 
-# Create unique group identifier for dataset_name & dataset_group
-df["dataset_group_id"] = df["dataset_name"].astype(str) + "_" + df["dataset_group"].astype(str)
-df["dataset_group_id"] = LabelEncoder().fit_transform(df["dataset_group_id"])
-
 # Define Features & Target
-X = df.drop(columns=["id", "smape", "is_better", "dataset_group_id"])
+X = df.drop(columns=["id", "smape", "is_better", "dataset_name", "dataset_group", "dataset_group_id"])
 y = df["is_better"]
 
 # Stratified Group K-Fold for Cross-Validation
-sgkf = StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=42)
+num_groups = df["dataset_group_id"].nunique()
+sgkf = StratifiedGroupKFold(n_splits=num_groups, shuffle=True, random_state=42)
 
 accuracies = []
 all_reports = []
 feature_importances = []
+
+# auc, log_loss
 
 for fold, (train_idx, test_idx) in enumerate(sgkf.split(X, y, groups=df["dataset_group_id"])):
     X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
@@ -70,7 +73,7 @@ sys.stdout = open(log_file, "w")
 print("Dataframe Info:")
 print(df.info())
 
-print(f"\nMean Accuracy: {mean_accuracy:.4f} ± {std_accuracy:.4f}\n")
+print(f"\nMean Accuracy: {mean_accuracy:.4f}\nStd Accuracy: {std_accuracy:.4f}")
 print("\nCross-Validation Results:")
 for report in all_reports:
     print(report)
