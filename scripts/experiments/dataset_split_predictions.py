@@ -19,9 +19,6 @@ df["dataset_group_id"] = df["dataset_name"].astype(str) + "_" + df["dataset_grou
 
 # Encode categorical variables
 encoder = LabelEncoder()
-df["dataset_name"] = encoder.fit_transform(df["dataset_name"])
-df["dataset_group"] = encoder.fit_transform(df["dataset_group"])
-df["dataset_group_id"] = encoder.fit_transform(df["dataset_group_id"])
 df["scaler_type"] = encoder.fit_transform(df["scaler_type"])
 
 # Handle missing values
@@ -45,6 +42,9 @@ for fold, (train_idx, test_idx) in enumerate(sgkf.split(X, y, groups=df["dataset
     X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
     y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
 
+    # Print test dataset_group_id
+    test_group_id = df.iloc[test_idx]["dataset_group_id"].unique()
+
     model = RandomForestClassifier(n_estimators=200, random_state=42)
     model.fit(X_train, y_train)
     
@@ -52,7 +52,7 @@ for fold, (train_idx, test_idx) in enumerate(sgkf.split(X, y, groups=df["dataset
     acc = accuracy_score(y_test, y_pred)
     accuracies.append(acc)
     
-    all_reports.append(f"Fold {fold+1} Accuracy: {acc:.4f}\n{classification_report(y_test, y_pred, zero_division=1)}")
+    all_reports.append(f"Testing {test_group_id} Accuracy: {acc:.4f}\n{classification_report(y_test, y_pred, zero_division=1)}")
     
     # Store feature importance for averaging
     feature_importances.append(model.feature_importances_)

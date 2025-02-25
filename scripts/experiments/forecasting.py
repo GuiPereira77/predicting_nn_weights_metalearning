@@ -33,12 +33,12 @@ if device == "gpu":
 # ---- Variables ----
 # ---- Hyperparameter Combinations using itertools.product ----
 # Fix max_steps to 1000 for now, increase num hyperparameters
-HIDDEN_SIZE_LIST = [8, 16, 32, 64]  # Number of units in each hidden layer
-MAX_STEPS_LIST = [100, 200, 500, 1000]  # Maximum number of training steps
-NUM_LAYERS_LIST = [3]  # Number of hidden layers
-LEARNING_RATE_LIST = [1e-3, 5e-4, 1e-4]  # Learning rate
-BATCH_SIZE_LIST = [32, 64, 128]  # Batch size for training
-SCALER_TYPE_LIST = ['identity', 'standard', 'robust']  # Type of scaler for normalization
+HIDDEN_SIZE_LIST = [8, 16, 32, 64, 128, 256]
+MAX_STEPS_LIST = [1000]
+NUM_LAYERS_LIST = [3]
+LEARNING_RATE_LIST = [1e-2, 5e-3, 1e-3, 5e-4, 1e-4, 5e-5]
+BATCH_SIZE_LIST = [16, 32, 64, 128, 256]
+SCALER_TYPE_LIST = ['identity', 'standard', 'robust', 'minmax', 'maxabs']
 
 results = {}
 
@@ -97,14 +97,14 @@ for data_name, group in DATA_GROUPS:
         )
 
         try:
-            logger.info(f"Starting model training with hidden_size={hidden_size}, max_steps={max_steps}, "
+            logger.info(f"Starting model training with hidden_size={hidden_size},"
                          f"learning_rate={learning_rate}, batch_size={batch_size}, scaler_type={scaler_type}")
             nf = NeuralForecast(models=[model], freq=freq_str)
             nf.fit(df=train)
             fcst = nf.predict()
             logger.info(f"Model training completed.")
         except Exception as e:
-            logger.error(f"Error during training with hidden_size={hidden_size}, max_steps={max_steps}, "
+            logger.error(f"Error during training with hidden_size={hidden_size},"
                          f"learning_rate={learning_rate}, batch_size={batch_size}, scaler_type={scaler_type}: {e}")
             continue
 
@@ -132,8 +132,7 @@ for data_name, group in DATA_GROUPS:
         logger.info(f"Is the MLP model better than the Seasonal Naive model? {scores['is_better']}")
 
         # ---- Create Model Statistics Dictionary ----
-        key = f"{data_name}_{group}_hidden_size_{hidden_size}_max_steps_{max_steps}_learning_rate_{learning_rate}_" \
-                f"batch_size_{batch_size}_scaler_type_{scaler_type}"
+        key = f"{data_name}_{group}_hidden_size_{hidden_size}_learning_rate_{learning_rate}_batch_size_{batch_size}_scaler_type_{scaler_type}"
         results[key] = {
             "dataset": {
                 "name": data_name,
