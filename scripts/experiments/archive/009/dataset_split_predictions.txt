@@ -1,0 +1,155 @@
+Dataframe Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 430 entries, 0 to 429
+Data columns (total 47 columns):
+ #   Column                       Non-Null Count  Dtype  
+---  ------                       --------------  -----  
+ 0   id                           430 non-null    object 
+ 1   dataset_name                 430 non-null    object 
+ 2   dataset_group                430 non-null    object 
+ 3   input_size                   430 non-null    int64  
+ 4   horizon                      430 non-null    int64  
+ 5   num_layers                   430 non-null    int64  
+ 6   hidden_size                  430 non-null    int64  
+ 7   max_steps                    430 non-null    int64  
+ 8   learning_rate                430 non-null    float64
+ 9   batch_size                   430 non-null    int64  
+ 10  scaler_type                  430 non-null    int32  
+ 11  total_params                 430 non-null    int64  
+ 12  smape                        430 non-null    float64
+ 13  is_better                    430 non-null    bool   
+ 14  mlp.0.weight_mean            430 non-null    float64
+ 15  mlp.0.weight_median          430 non-null    float64
+ 16  mlp.0.weight_std             430 non-null    float64
+ 17  mlp.0.weight_max             430 non-null    float64
+ 18  mlp.0.weight_min             430 non-null    float64
+ 19  mlp.0.weight_frobenius_norm  430 non-null    float64
+ 20  mlp.0.weight_spectral_norm   430 non-null    float64
+ 21  mlp.0.weight_alpha           430 non-null    float64
+ 22  mlp.1.weight_mean            430 non-null    float64
+ 23  mlp.1.weight_median          430 non-null    float64
+ 24  mlp.1.weight_std             430 non-null    float64
+ 25  mlp.1.weight_max             430 non-null    float64
+ 26  mlp.1.weight_min             430 non-null    float64
+ 27  mlp.1.weight_frobenius_norm  430 non-null    float64
+ 28  mlp.1.weight_spectral_norm   430 non-null    float64
+ 29  mlp.1.weight_alpha           430 non-null    float64
+ 30  mlp.2.weight_mean            430 non-null    float64
+ 31  mlp.2.weight_median          430 non-null    float64
+ 32  mlp.2.weight_std             430 non-null    float64
+ 33  mlp.2.weight_max             430 non-null    float64
+ 34  mlp.2.weight_min             430 non-null    float64
+ 35  mlp.2.weight_frobenius_norm  430 non-null    float64
+ 36  mlp.2.weight_spectral_norm   430 non-null    float64
+ 37  mlp.2.weight_alpha           430 non-null    float64
+ 38  out.weight_mean              430 non-null    float64
+ 39  out.weight_median            430 non-null    float64
+ 40  out.weight_std               430 non-null    float64
+ 41  out.weight_max               430 non-null    float64
+ 42  out.weight_min               430 non-null    float64
+ 43  out.weight_frobenius_norm    430 non-null    float64
+ 44  out.weight_spectral_norm     430 non-null    float64
+ 45  out.weight_alpha             430 non-null    float64
+ 46  dataset_group_id             430 non-null    object 
+dtypes: bool(1), float64(34), int32(1), int64(7), object(4)
+memory usage: 153.4+ KB
+None
+
+Mean Accuracy: 0.9209
+Std Accuracy: 0.0186
+
+Cross-Validation Results:
+Testing ['Gluonts_m1_monthly'] Accuracy: 0.8953
+              precision    recall  f1-score   support
+
+       False       0.64      0.58      0.61        12
+        True       0.93      0.95      0.94        74
+
+    accuracy                           0.90        86
+   macro avg       0.78      0.76      0.77        86
+weighted avg       0.89      0.90      0.89        86
+
+Testing ['Gluonts_m1_monthly'] Accuracy: 0.9186
+              precision    recall  f1-score   support
+
+       False       0.93      0.68      0.79        19
+        True       0.92      0.99      0.95        67
+
+    accuracy                           0.92        86
+   macro avg       0.92      0.83      0.87        86
+weighted avg       0.92      0.92      0.91        86
+
+Testing ['Gluonts_m1_monthly'] Accuracy: 0.9535
+              precision    recall  f1-score   support
+
+       False       1.00      0.71      0.83        14
+        True       0.95      1.00      0.97        72
+
+    accuracy                           0.95        86
+   macro avg       0.97      0.86      0.90        86
+weighted avg       0.96      0.95      0.95        86
+
+Testing ['Gluonts_m1_monthly'] Accuracy: 0.9186
+              precision    recall  f1-score   support
+
+       False       0.94      0.71      0.81        21
+        True       0.91      0.98      0.95        65
+
+    accuracy                           0.92        86
+   macro avg       0.93      0.85      0.88        86
+weighted avg       0.92      0.92      0.91        86
+
+Testing ['Gluonts_m1_monthly'] Accuracy: 0.9186
+              precision    recall  f1-score   support
+
+       False       0.79      0.73      0.76        15
+        True       0.94      0.96      0.95        71
+
+    accuracy                           0.92        86
+   macro avg       0.87      0.85      0.85        86
+weighted avg       0.92      0.92      0.92        86
+
+
+Average Feature Importance:
+                     Feature  Importance
+                scaler_type    0.095244
+           mlp.0.weight_min    0.089218
+ mlp.0.weight_spectral_norm    0.064703
+          mlp.0.weight_mean    0.051011
+mlp.0.weight_frobenius_norm    0.046472
+           mlp.1.weight_min    0.044446
+          mlp.1.weight_mean    0.040684
+           mlp.0.weight_max    0.039341
+        mlp.0.weight_median    0.037450
+          mlp.2.weight_mean    0.033359
+ mlp.1.weight_spectral_norm    0.032804
+           mlp.2.weight_min    0.032235
+           mlp.0.weight_std    0.031144
+           mlp.1.weight_max    0.029330
+mlp.1.weight_frobenius_norm    0.028035
+        mlp.1.weight_median    0.023375
+          out.weight_median    0.020350
+           out.weight_alpha    0.019730
+            out.weight_mean    0.019321
+             out.weight_max    0.018983
+mlp.2.weight_frobenius_norm    0.018579
+           mlp.1.weight_std    0.016958
+         mlp.1.weight_alpha    0.016512
+           mlp.2.weight_std    0.015556
+ mlp.2.weight_spectral_norm    0.015237
+           mlp.2.weight_max    0.015143
+             out.weight_std    0.014835
+         mlp.2.weight_alpha    0.014637
+        mlp.2.weight_median    0.014445
+   out.weight_spectral_norm    0.012361
+  out.weight_frobenius_norm    0.012033
+         mlp.0.weight_alpha    0.011948
+             out.weight_min    0.010964
+                 batch_size    0.004642
+              learning_rate    0.004437
+               total_params    0.002461
+                hidden_size    0.002016
+                 num_layers    0.000000
+                  max_steps    0.000000
+                    horizon    0.000000
+                 input_size    0.000000
