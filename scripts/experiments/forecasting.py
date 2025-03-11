@@ -4,7 +4,6 @@ import json
 import logging
 import torch
 import copy
-import pandas as pd
 from itertools import product
 from neuralforecast import NeuralForecast
 from neuralforecast.models import MLP
@@ -13,6 +12,7 @@ from statsforecast.models import SeasonalNaive
 from utilsforecast.evaluation import evaluate
 from utilsforecast.losses import smape
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import weightwatcher as ww
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
@@ -22,6 +22,7 @@ from src.utils.load_data.config import DATASETS, DATA_GROUPS
 # ---- Configure logging ----
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+# logger.setLevel(logging.CRITICAL)
 
 # ---- Detect GPU availability ----
 device = "gpu" if torch.cuda.is_available() else "cpu"
@@ -32,13 +33,12 @@ if device == "gpu":
 
 # ---- Variables ----
 # ---- Hyperparameter Combinations using itertools.product ----
-# Fix max_steps to 1000 for now, increase num hyperparameters
 HIDDEN_SIZE_LIST = [8, 16, 32, 64, 128, 256]
 MAX_STEPS_LIST = [1000]
 NUM_LAYERS_LIST = [3]
 LEARNING_RATE_LIST = [1e-2, 5e-3, 1e-3, 5e-4, 1e-4, 5e-5]
 BATCH_SIZE_LIST = [16, 32, 64, 128, 256]
-SCALER_TYPE_LIST = ['identity', 'standard', 'robust', 'minmax', 'maxabs']
+SCALER_TYPE_LIST = ['identity', 'standard', 'robust', 'minmax']
 
 results = {}
 
@@ -110,6 +110,10 @@ for data_name, group in DATA_GROUPS:
 
         cv = fcst.merge(sfdf, on=['unique_id', 'ds'])
 
+        # ---- WeightWatcher Analysis ----
+        # watcher = ww.WeightWatcher(model=model)
+        # print(f"Analyze: {watcher.analyze(model=model)}\nDescribe: {watcher.describe(model=model)}\nSummary: {watcher.get_summary(model=model)}")
+
         # ---- Model Evaluation ----
         # Metrics calculation
         mse_score = mean_squared_error(cv['y'], cv['MLP'])
@@ -151,19 +155,20 @@ for data_name, group in DATA_GROUPS:
                 "total_params": sum(p.numel() for p in model.parameters()),
             },
             "scores": scores,
+            # "ww_metrics": copy.deepcopy(wp_cb.ww_metrics),
             "weights": copy.deepcopy(wp_cb.stats),
         }
 
         logger.info(f"Model statistics dictionary created for {key}")
 
-    # ---- Save Results to JSON File ----
-    output_dir = "./scripts/experiments"
-    output_file = os.path.join(output_dir, "model_stats.json")
+        # ---- Save Results to JSON File ----
+        output_dir = "./scripts/experiments"
+        output_file = os.path.join(output_dir, "model_stats.json")
 
-    try:
-        with open(output_file, "w") as f:
-            json.dump(results, f, indent=4)
-        logger.info(f"Results saved to {output_file}")
-    except Exception as e:
-        logger.error(f"Error saving results to {output_file}: {e}")
-        sys.exit(1)
+        try:
+            with open(output_file, "w") as f:
+                json.dump(results, f, indent=4)
+            logger.info(f"Results saved to {output_file}")
+        except Exception as e:
+            logger.error(f"Error saving results to {output_file}: {e}")
+            sys.exit(1)

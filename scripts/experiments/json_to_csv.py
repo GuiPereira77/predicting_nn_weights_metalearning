@@ -32,11 +32,19 @@ for model_name, details in data.items():
         record[f"{layer}_std"] = weights["std"]
         record[f"{layer}_max"] = weights["max"]
         record[f"{layer}_min"] = weights["min"]
+        record[f"{layer}_frobenius_norm"] = weights["frobenius_norm"]
+        record[f"{layer}_spectral_norm"] = weights["spectral_norm"]
+        record[f"{layer}_alpha"] = weights["alpha"]
+        record[f"{layer}_alpha_hat"] = weights["alpha_hat"]
 
     records.append(record)
 
 df = pd.DataFrame(records)
-print(df["is_better"].value_counts(normalize=True))
+
+# Print metrics
+print(df.shape)
+# print(df.filter(like="alpha").describe())
+# print(df["is_better"].value_counts(normalize=True))
 
 # Store the DataFrame in a CSV file
 df.to_csv("scripts/experiments/model_stats.csv", index=False)
