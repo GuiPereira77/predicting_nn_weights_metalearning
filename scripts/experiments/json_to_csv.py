@@ -21,6 +21,7 @@ for model_name, details in data.items():
         "batch_size": details["model"]["batch_size"],
         "scaler_type": details["model"]["scaler_type"],
         "total_params": details["model"]["total_params"],
+        "seed": details["seed"],
         "smape": details["scores"]["smape"],
         "is_better": details["scores"]["is_better"]
     }

@@ -4,6 +4,7 @@ import json
 import logging
 import torch
 import copy
+import random
 from itertools import product
 from neuralforecast import NeuralForecast
 from neuralforecast.models import MLP
@@ -12,7 +13,6 @@ from statsforecast.models import SeasonalNaive
 from utilsforecast.evaluation import evaluate
 from utilsforecast.losses import smape
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-import weightwatcher as ww
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
@@ -22,7 +22,7 @@ from src.utils.load_data.config import DATASETS, DATA_GROUPS
 # ---- Configure logging ----
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
-# logger.setLevel(logging.CRITICAL)
+logger.setLevel(logging.ERROR)
 
 # ---- Detect GPU availability ----
 device = "gpu" if torch.cuda.is_available() else "cpu"
@@ -33,12 +33,13 @@ if device == "gpu":
 
 # ---- Variables ----
 # ---- Hyperparameter Combinations using itertools.product ----
-HIDDEN_SIZE_LIST = [8, 16, 32, 64, 128, 256]
-MAX_STEPS_LIST = [1000]
+HIDDEN_SIZE_LIST = [8, 16, 32, 64]
+MAX_STEPS_LIST = [500]
 NUM_LAYERS_LIST = [3]
-LEARNING_RATE_LIST = [1e-2, 5e-3, 1e-3, 5e-4, 1e-4, 5e-5]
-BATCH_SIZE_LIST = [16, 32, 64, 128, 256]
+LEARNING_RATE_LIST = [1e-3, 5e-4, 1e-4]
+BATCH_SIZE_LIST = [16, 32, 64]
 SCALER_TYPE_LIST = ['identity', 'standard', 'robust', 'minmax']
+SEED_LIST = [42, 123, 456, 789, 1011, 1213, 1415, 1617, 1819, 2021]
 
 results = {}
 
@@ -76,11 +77,17 @@ for data_name, group in DATA_GROUPS:
 
     # ---- Generate all possible combinations of the hyperparameters ----
     hyperparameter_combinations = product(
-        HIDDEN_SIZE_LIST,MAX_STEPS_LIST,NUM_LAYERS_LIST,LEARNING_RATE_LIST,BATCH_SIZE_LIST,SCALER_TYPE_LIST
+        HIDDEN_SIZE_LIST,MAX_STEPS_LIST,NUM_LAYERS_LIST,LEARNING_RATE_LIST,BATCH_SIZE_LIST,SCALER_TYPE_LIST,SEED_LIST
         )
 
     # ---- Model Training for Different Hyperparameter Combinations ----
-    for hidden_size, max_steps, num_layers, learning_rate, batch_size, scaler_type in hyperparameter_combinations:
+    for hidden_size, max_steps, num_layers, learning_rate, batch_size, scaler_type, seed in hyperparameter_combinations:
+        # Set the random seed for reproducibility
+        random.seed(seed)
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed(seed)
+        
         # Create a new MLP model with the current hyperparameters
         wp_cb = WeightsPrinterCallback()
         model = MLP(
@@ -98,21 +105,17 @@ for data_name, group in DATA_GROUPS:
 
         try:
             logger.info(f"Starting model training with hidden_size={hidden_size},"
-                         f"learning_rate={learning_rate}, batch_size={batch_size}, scaler_type={scaler_type}")
+                         f"learning_rate={learning_rate}, batch_size={batch_size}, scaler_type={scaler_type}, seed={seed}")
             nf = NeuralForecast(models=[model], freq=freq_str)
             nf.fit(df=train)
             fcst = nf.predict()
             logger.info(f"Model training completed.")
         except Exception as e:
             logger.error(f"Error during training with hidden_size={hidden_size},"
-                         f"learning_rate={learning_rate}, batch_size={batch_size}, scaler_type={scaler_type}: {e}")
+                         f"learning_rate={learning_rate}, batch_size={batch_size}, scaler_type={scaler_type}, seed={seed}: {e}")
             continue
 
         cv = fcst.merge(sfdf, on=['unique_id', 'ds'])
-
-        # ---- WeightWatcher Analysis ----
-        # watcher = ww.WeightWatcher(model=model)
-        # print(f"Analyze: {watcher.analyze(model=model)}\nDescribe: {watcher.describe(model=model)}\nSummary: {watcher.get_summary(model=model)}")
 
         # ---- Model Evaluation ----
         # Metrics calculation
@@ -136,7 +139,7 @@ for data_name, group in DATA_GROUPS:
         logger.info(f"Is the MLP model better than the Seasonal Naive model? {scores['is_better']}")
 
         # ---- Create Model Statistics Dictionary ----
-        key = f"{data_name}_{group}_hidden_size_{hidden_size}_learning_rate_{learning_rate}_batch_size_{batch_size}_scaler_type_{scaler_type}"
+        key = f"{data_name}_{group}_hidden_size_{hidden_size}_learning_rate_{learning_rate}_batch_size_{batch_size}_scaler_type_{scaler_type}_seed_{seed}"
         results[key] = {
             "dataset": {
                 "name": data_name,
@@ -154,8 +157,8 @@ for data_name, group in DATA_GROUPS:
                 "scaler_type": scaler_type,
                 "total_params": sum(p.numel() for p in model.parameters()),
             },
+            "seed": seed,
             "scores": scores,
-            # "ww_metrics": copy.deepcopy(wp_cb.ww_metrics),
             "weights": copy.deepcopy(wp_cb.stats),
         }
 
