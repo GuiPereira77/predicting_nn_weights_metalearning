@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import powerlaw
 import uuid
 import os
+import torch
 
 class WeightsPrinterCallback(pl.Callback):
     stats = {}
@@ -12,6 +13,8 @@ class WeightsPrinterCallback(pl.Callback):
 
     def on_train_end(self, trainer, pl_module):
         """Called at the end of training to evaluate and analyze weights."""
+        self._get_gradient_norm(pl_module)
+        self._get_model_variance(pl_module)
         self._evaluate_weights(pl_module)
 
     def _evaluate_weights(self, pl_module):
@@ -34,15 +37,28 @@ class WeightsPrinterCallback(pl.Callback):
                     **wm_analysis
                 }
 
-    def _weight_watcher(self, pl_module):
-        """Analyzes the model's weight matrices using WeightWatcher."""
-        watcher = ww.WeightWatcher()
-        describe = watcher.describe(model=pl_module)
-        print(describe)
-        self.ww_metrics = watcher.get_summary()
-
     def analyze_weight_matrix(self, W, layer_name):
-        """Function to perform SVD and analyze eigenvalues."""
+        """
+        Analyze the weight matrix of a neural network layer using Singular Value Decomposition (SVD) 
+        and power-law fitting.
+        Parameters:
+        W (numpy.ndarray): The weight matrix to be analyzed.
+        layer_name (str): The name of the layer to which the weight matrix belongs.
+        Returns:
+        dict: A dictionary containing the following metrics:
+            - frobenius_norm (float): The Frobenius norm of the weight matrix.
+            - spectral_norm (float): The spectral norm (largest singular value) of the weight matrix.
+            - alpha (float): The power-law exponent fitted to the eigenvalues of the weight matrix.
+            - alpha_hat (float): The adjusted power-law exponent based on the mean and median of the eigenvalues.
+        This function performs the following steps:
+        1. Computes the Singular Value Decomposition (SVD) of the weight matrix.
+        2. Calculates the eigenvalues of the weight matrix.
+        3. Computes the Frobenius norm and spectral norm of the weight matrix.
+        4. Fits a power-law distribution to the eigenvalues and calculates the power-law exponent.
+        5. Returns a dictionary containing the computed metrics.
+        Note:
+        - If the power-law fitting fails, 'alpha' and 'alpha_hat' will be set to None.
+        """
         # Perform Singular Value Decomposition (SVD)
         U, S, VT = np.linalg.svd(W, full_matrices=False)
 
@@ -68,38 +84,61 @@ class WeightsPrinterCallback(pl.Callback):
             alpha_hat = None
             print(f"Power Law fit failed: {e}")
 
-        # Plot histogram of eigenvalues
-        # self.plot_eigenvalues_histogram(eigenvalues, alpha, fit.xmin, layer_name)
-
         return {
             "frobenius_norm": float(frobenius_norm),
             "spectral_norm": float(spectral_norm),
             "alpha": float(alpha),
             "alpha_hat": float(alpha_hat)
         }
+    
+    def _get_gradient_norm(self, model):
+        """
+        Compute the norm of the gradients of the model.
 
-    def plot_eigenvalues_histogram(self, eigenvalues, alpha, xmin, layer_name):
-        """Plots and saves the histogram of eigenvalues with power-law fit."""
-        plt.figure(figsize=(6, 4))
-        plt.hist(eigenvalues, bins=30, density=True, alpha=0.75, color='b', label='Eigenvalues Histogram')
+        This method calculates the L2 norm of the gradients for all parameters in the model
+        and stores the result in the 'gradient_norm' key of the 'stats' dictionary.
 
-        if alpha is not None:
-            x = np.linspace(min(eigenvalues), max(eigenvalues), 100)
-            plt.plot(x, (x / xmin) ** (-alpha), 'r--', label=f'Power Law Fit (alpha={alpha:.2f})')
+        Gradient Norm ≈ 0 → Vanishing gradients
+        Gradient Norm is huge (>10 or 100) → Exploding gradients
+        Steady gradient norm (~0.01 - 1) → Healthy training
 
-        plt.xlabel('Eigenvalue')
-        plt.ylabel('Density')
-        plt.title(f'Histogram of Eigenvalues of W^T W for Layer: {layer_name}')
-        plt.legend()
+        Args:
+            model (torch.nn.Module): The model whose gradients are to be computed.
+        """
+        total_norm = 0
+        for p in model.parameters():
+            param_norm = p.grad.data.norm(2)
+            total_norm += param_norm.item() ** 2
+        self.stats['gradient_norm'] = total_norm ** 0.5
 
-        if not os.path.exists(f'eigen_hist/{layer_name}'):
-            os.makedirs(f'eigen_hist/{layer_name}')
-        plt.savefig(f'eigen_hist/{layer_name}/{uuid.uuid4()}.png')
-        plt.close()
+    def _get_model_variance(self, model):
+        """Compute the variance of the model weights."""
+        all_weights = torch.cat([param.data.flatten() for param in model.parameters() if len(param.shape) > 1])
+        model_variance = torch.var(all_weights)
+        self.stats['model_variance'] = model_variance.item()
 
-    def print_stats(self):
-        """Prints collected weight statistics."""
-        for name, stats in self.stats.items():
-            print(f"\nLayer: {name}")
-            for stat_name, stat_value in stats.items():
-                print(f"{stat_name}: {stat_value}")
+    # def plot_eigenvalues_histogram(self, eigenvalues, alpha, xmin, layer_name):
+    #     """Plots and saves the histogram of eigenvalues with power-law fit."""
+    #     plt.figure(figsize=(6, 4))
+    #     plt.hist(eigenvalues, bins=30, density=True, alpha=0.75, color='b', label='Eigenvalues Histogram')
+
+    #     if alpha is not None:
+    #         x = np.linspace(min(eigenvalues), max(eigenvalues), 100)
+    #         plt.plot(x, (x / xmin) ** (-alpha), 'r--', label=f'Power Law Fit (alpha={alpha:.2f})')
+
+    #     plt.xlabel('Eigenvalue')
+    #     plt.ylabel('Density')
+    #     plt.title(f'Histogram of Eigenvalues of W^T W for Layer: {layer_name}')
+    #     plt.legend()
+
+    #     if not os.path.exists(f'eigen_hist/{layer_name}'):
+    #         os.makedirs(f'eigen_hist/{layer_name}')
+    #     plt.savefig(f'eigen_hist/{layer_name}/{uuid.uuid4()}.png')
+    #     plt.close()
+
+    # def print_stats(self):
+    #     """Prints collected weight statistics."""
+    #     for name, stats in self.stats.items():
+    #         print(f"\nLayer: {name}")
+    #         for stat_name, stat_value in stats.items():
+    #             print(f"{stat_name}: {stat_value}")
