@@ -30,6 +30,7 @@ class WeightsPrinterCallback(pl.Callback):
                     'std': np.std(tensor_np).item(),
                     'max': np.max(tensor_np).item(),
                     'min': np.min(tensor_np).item(),
+                    'var': np.var(tensor_np).item(),
                     **wm_analysis
                 }
 
