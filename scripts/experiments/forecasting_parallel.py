@@ -24,7 +24,7 @@ from src.utils.load_data.config import DATASETS, DATA_GROUPS
 # ---- Configure logging ----
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.ERROR)
 
 # ---- Detect GPU availability ----
 device = "gpu" if torch.cuda.is_available() else "cpu"
@@ -39,7 +39,7 @@ HIDDEN_SIZE_LIST = [8, 16, 32, 64]
 MAX_STEPS_LIST = [500]
 NUM_LAYERS_LIST = [3]
 LEARNING_RATE_LIST = [1e-3, 5e-4, 1e-4]
-BATCH_SIZE_LIST = [16, 32, 64]
+BATCH_SIZE_LIST = [8, 16, 32]  # Reduced batch sizes
 SCALER_TYPE_LIST = ['identity', 'standard', 'robust', 'minmax']
 SEED_LIST = [42, 123, 456, 789, 1011, 1213, 1415, 1617, 1819, 2021]
 
@@ -50,7 +50,8 @@ hyperparameter_combinations = product(
 
 results = {}
 results_lock = Lock()
-num_cores = os.cpu_count()*3//4
+# num_workers = os.cpu_count()
+num_workers = 4
 
 def train_model(data_name, group, hidden_size, max_steps, num_layers, learning_rate, batch_size, scaler_type, seed):
     try:
@@ -106,7 +107,7 @@ def train_model(data_name, group, hidden_size, max_steps, num_layers, learning_r
         logger.info(f"Is the MLP model better than the Seasonal Naive model? {scores['is_better']}")
 
         # ---- Create Model Statistics Dictionary ----
-        key = f"{data_name}_{group}_hidden_size_{hidden_size}_learning_rate_{learning_rate}_batch_size_{batch_size}_scaler_type_{scaler_type}_seed_{seed}"
+        key = f"{data_name}_{group}_hidden_size={hidden_size}_learning_rate={learning_rate}_batch_size={batch_size}_scaler_type={scaler_type}_seed={seed}"
         model_stats = {
             "dataset": {
                 "name": data_name,
@@ -132,7 +133,7 @@ def train_model(data_name, group, hidden_size, max_steps, num_layers, learning_r
         with results_lock:
             results[key] = model_stats
 
-        logger.warning(f"Model statistics dictionary created for {key}")
+        print(f"Model statistics dictionary created for {key}")
 
     except Exception as e:
         logger.error(f"Error during training with hidden_size={hidden_size},"
@@ -150,6 +151,7 @@ for data_name, group in DATA_GROUPS:
         logger.info("Data successfully loaded and split.")
     except Exception as e:
         logger.error(f"Error loading data: {e}")
+        continue  # Continue to the next data group
 
     # ---- Model Training for Seasonal Naive ----
     try:
@@ -167,16 +169,20 @@ for data_name, group in DATA_GROUPS:
         logger.info("Seasonal Naive model training completed.")
     except Exception as e:
         logger.error(f"Error during Seasonal Naive model training: {e}")
+        continue  # Continue to the next data group
 
     # ---- Model Training for Different Hyperparameter Combinations ----
-    with ThreadPoolExecutor(max_workers=num_cores) as executor:
+    with ThreadPoolExecutor(max_workers=num_workers) as executor:
         futures = [
             executor.submit(train_model, data_name, group, hidden_size, max_steps, num_layers, learning_rate, batch_size, scaler_type, seed)
             for hidden_size, max_steps, num_layers, learning_rate, batch_size, scaler_type, seed in hyperparameter_combinations
         ]
 
         for future in as_completed(futures):
-            future.result()
+            try:
+                future.result(timeout=600)  # Add a timeout of 600 seconds (10 minutes)
+            except Exception as e:
+                logger.error(f"Error during training: {e}")
 
 # ---- Save Results to JSON File ----
 output_dir = "./scripts/experiments"
