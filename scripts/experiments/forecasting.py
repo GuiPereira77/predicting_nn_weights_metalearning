@@ -20,9 +20,8 @@ from src.callbacks.weights import WeightsPrinterCallback
 from src.utils.load_data.config import DATASETS, DATA_GROUPS
 
 # ---- Configure logging ----
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.ERROR)
 
 # ---- Detect GPU availability ----
 device = "gpu" if torch.cuda.is_available() else "cpu"
@@ -168,10 +167,10 @@ for data_name, group in DATA_GROUPS:
         output_dir = "./scripts/experiments"
         output_file = os.path.join(output_dir, "model_stats.json")
 
-        try:
-            with open(output_file, "w") as f:
-                json.dump(results, f, indent=4)
-            logger.info(f"Results saved to {output_file}")
-        except Exception as e:
-            logger.error(f"Error saving results to {output_file}: {e}")
-            sys.exit(1)
+    try:
+        with open(output_file, "w") as f:
+            json.dump(results, f, indent=4)
+        logger.info(f"Results saved to {output_file}")
+    except Exception as e:
+        logger.error(f"Error saving results to {output_file}: {e}")
+        sys.exit(1)

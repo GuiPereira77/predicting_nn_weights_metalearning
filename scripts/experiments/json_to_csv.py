@@ -47,5 +47,8 @@ print(df.shape)
 # print(df.filter(like="alpha").describe())
 # print(df["is_better"].value_counts(normalize=True))
 
+# Print unique values of 'seed'
+print(df["seed"].unique())
+
 # Store the DataFrame in a CSV file
 df.to_csv("scripts/experiments/model_stats.csv", index=False)
