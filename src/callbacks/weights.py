@@ -1,6 +1,5 @@
 import pytorch_lightning as pl
 import numpy as np
-import weightwatcher as ww
 import matplotlib.pyplot as plt
 import powerlaw
 import uuid
@@ -9,10 +8,10 @@ import torch
 
 class WeightsPrinterCallback(pl.Callback):
     stats = {}
-    ww_metrics = {}
 
     def on_train_end(self, trainer, pl_module):
         """Called at the end of training to evaluate and analyze weights."""
+        self._analyze_model_weights(pl_module)
         self._get_gradient_norm(pl_module)
         self._get_model_variance(pl_module)
         self._evaluate_weights(pl_module)
@@ -23,7 +22,7 @@ class WeightsPrinterCallback(pl.Callback):
         for name, tensor in state_dict.items():
             if 'weight' in name and tensor.ndimension() > 1:
                 tensor_np = tensor.detach().cpu().numpy()
-                wm_analysis = self.analyze_weight_matrix(tensor_np, name)
+                wm_analysis = self.analyze_weight_matrix(tensor_np)
                 self.stats[name] = {
                     'shape': tensor_np.shape,
                     'input_size': tensor_np.shape[1],
@@ -37,28 +36,8 @@ class WeightsPrinterCallback(pl.Callback):
                     **wm_analysis
                 }
 
-    def analyze_weight_matrix(self, W, layer_name):
-        """
-        Analyze the weight matrix of a neural network layer using Singular Value Decomposition (SVD) 
-        and power-law fitting.
-        Parameters:
-        W (numpy.ndarray): The weight matrix to be analyzed.
-        layer_name (str): The name of the layer to which the weight matrix belongs.
-        Returns:
-        dict: A dictionary containing the following metrics:
-            - frobenius_norm (float): The Frobenius norm of the weight matrix.
-            - spectral_norm (float): The spectral norm (largest singular value) of the weight matrix.
-            - alpha (float): The power-law exponent fitted to the eigenvalues of the weight matrix.
-            - alpha_hat (float): The adjusted power-law exponent based on the mean and median of the eigenvalues.
-        This function performs the following steps:
-        1. Computes the Singular Value Decomposition (SVD) of the weight matrix.
-        2. Calculates the eigenvalues of the weight matrix.
-        3. Computes the Frobenius norm and spectral norm of the weight matrix.
-        4. Fits a power-law distribution to the eigenvalues and calculates the power-law exponent.
-        5. Returns a dictionary containing the computed metrics.
-        Note:
-        - If the power-law fitting fails, 'alpha' and 'alpha_hat' will be set to None.
-        """
+    def analyze_weight_matrix(self, W):
+        """ Analyze the weight matrix of the model. """
         # Perform Singular Value Decomposition (SVD)
         U, S, VT = np.linalg.svd(W, full_matrices=False)
 
@@ -90,7 +69,38 @@ class WeightsPrinterCallback(pl.Callback):
             "alpha": float(alpha),
             "alpha_hat": float(alpha_hat)
         }
-    
+
+    def _analyze_model_weights(self, model):
+        """
+        Analyze the combined weight matrix of an entire neural network model.
+
+        Parameters:
+        - model (torch.nn.Module): The PyTorch model to analyze.
+
+        Returns:
+        - None: The analysis results are stored in the 'stats' dictionary.
+        """
+        # Collect all weight matrices
+        weight_matrices = []
+        
+        for name, param in model.named_parameters():
+            if "weight" in name and param.requires_grad:  # Ensure it's a weight matrix
+                W = param.detach().cpu().numpy()
+                weight_matrices.append(W)  # Store raw weight matrices
+
+        if len(weight_matrices) == 0:
+            raise ValueError("No weight matrices found in the model.")
+
+        # Concatenate all weights into one large matrix
+        W_combined = np.vstack([W.reshape(W.shape[0], -1) for W in weight_matrices])  # Reshape each to (rows, flattened cols)
+        dictionary = self.analyze_weight_matrix(W_combined)
+
+        # Store the results in the 'stats' dictionary
+        self.stats['froebeinus_norm'] = dictionary['frobenius_norm']
+        self.stats['spectral_norm'] = dictionary['spectral_norm']
+        self.stats['alpha'] = dictionary['alpha']
+        self.stats['alpha_hat'] = dictionary['alpha_hat']
+
     def _get_gradient_norm(self, model):
         """
         Compute the norm of the gradients of the model.
@@ -103,7 +113,10 @@ class WeightsPrinterCallback(pl.Callback):
         Steady gradient norm (~0.01 - 1) → Healthy training
 
         Args:
-            model (torch.nn.Module): The model whose gradients are to be computed.
+        - model (torch.nn.Module): The model whose gradients are to be computed.
+
+        Returns:
+        - None: The gradient norm is stored in the 'stats' dictionary.
         """
         total_norm = 0
         for p in model.parameters():
