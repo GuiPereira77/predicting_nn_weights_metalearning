@@ -43,12 +43,13 @@ for model_name, details in data.items():
 df = pd.DataFrame(records)
 
 # Print metrics
-print(df.shape)
-# print(df.filter(like="alpha").describe())
+# print(df.shape)
+# print(df.filter(like="alpha_hat").describe())
 # print(df["is_better"].value_counts(normalize=True))
 
 # Print unique values of 'seed'
-print(df["seed"].unique())
+# print(df["seed"].unique())
+
 
 # Store the DataFrame in a CSV file
 df.to_csv("scripts/experiments/model_stats.csv", index=False)
