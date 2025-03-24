@@ -1,0 +1,129 @@
+Dataframe Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 8640 entries, 0 to 8639
+Data columns (total 52 columns):
+ #   Column                       Non-Null Count  Dtype  
+---  ------                       --------------  -----  
+ 0   id                           8640 non-null   object 
+ 1   dataset_name                 8640 non-null   object 
+ 2   dataset_group                8640 non-null   object 
+ 3   input_size                   8640 non-null   int64  
+ 4   horizon                      8640 non-null   int64  
+ 5   num_layers                   8640 non-null   int64  
+ 6   hidden_size                  8640 non-null   int64  
+ 7   max_steps                    8640 non-null   int64  
+ 8   learning_rate                8640 non-null   float64
+ 9   batch_size                   8640 non-null   int64  
+ 10  scaler_type                  8640 non-null   int32  
+ 11  total_params                 8640 non-null   int64  
+ 12  seed                         8640 non-null   int64  
+ 13  smape                        8640 non-null   float64
+ 14  is_better                    8640 non-null   bool   
+ 15  mlp.0.weight_mean            8640 non-null   float64
+ 16  mlp.0.weight_median          8640 non-null   float64
+ 17  mlp.0.weight_std             8640 non-null   float64
+ 18  mlp.0.weight_max             8640 non-null   float64
+ 19  mlp.0.weight_min             8640 non-null   float64
+ 20  mlp.0.weight_frobenius_norm  8640 non-null   float64
+ 21  mlp.0.weight_spectral_norm   8640 non-null   float64
+ 22  mlp.0.weight_alpha           8640 non-null   float64
+ 23  mlp.0.weight_alpha_hat       8640 non-null   float64
+ 24  mlp.1.weight_mean            8640 non-null   float64
+ 25  mlp.1.weight_median          8640 non-null   float64
+ 26  mlp.1.weight_std             8640 non-null   float64
+ 27  mlp.1.weight_max             8640 non-null   float64
+ 28  mlp.1.weight_min             8640 non-null   float64
+ 29  mlp.1.weight_frobenius_norm  8640 non-null   float64
+ 30  mlp.1.weight_spectral_norm   8640 non-null   float64
+ 31  mlp.1.weight_alpha           8640 non-null   float64
+ 32  mlp.1.weight_alpha_hat       8640 non-null   float64
+ 33  mlp.2.weight_mean            8640 non-null   float64
+ 34  mlp.2.weight_median          8640 non-null   float64
+ 35  mlp.2.weight_std             8640 non-null   float64
+ 36  mlp.2.weight_max             8640 non-null   float64
+ 37  mlp.2.weight_min             8640 non-null   float64
+ 38  mlp.2.weight_frobenius_norm  8640 non-null   float64
+ 39  mlp.2.weight_spectral_norm   8640 non-null   float64
+ 40  mlp.2.weight_alpha           8640 non-null   float64
+ 41  mlp.2.weight_alpha_hat       8640 non-null   float64
+ 42  out.weight_mean              8640 non-null   float64
+ 43  out.weight_median            8640 non-null   float64
+ 44  out.weight_std               8640 non-null   float64
+ 45  out.weight_max               8640 non-null   float64
+ 46  out.weight_min               8640 non-null   float64
+ 47  out.weight_frobenius_norm    8640 non-null   float64
+ 48  out.weight_spectral_norm     8640 non-null   float64
+ 49  out.weight_alpha             8640 non-null   float64
+ 50  out.weight_alpha_hat         8640 non-null   float64
+ 51  dataset_group_id             8640 non-null   object 
+dtypes: bool(1), float64(38), int32(1), int64(8), object(4)
+memory usage: 3.3+ MB
+None
+
+Mean MAE: 0.0592
+Std MAE: 0.0108
+
+Cross-Validation Results:
+Testing ['Tourism_Quarterly'] MAE: 0.0666
+None
+Testing ['Tourism_Monthly'] MAE: 0.0471
+None
+Testing ['M3_Quarterly'] MAE: 0.0551
+None
+Testing ['M3_Monthly'] MAE: 0.0500
+None
+Testing ['Gluonts_m1_quarterly'] MAE: 0.0574
+None
+Testing ['Gluonts_m1_monthly'] MAE: 0.0792
+None
+
+Average Feature Importance:
+                     Feature   Importance
+                scaler_type 2.254457e-01
+ mlp.0.weight_spectral_norm 1.645964e-01
+ mlp.1.weight_spectral_norm 1.456063e-01
+ mlp.2.weight_spectral_norm 1.217809e-01
+          mlp.0.weight_mean 7.612224e-02
+             out.weight_std 3.159466e-02
+mlp.1.weight_frobenius_norm 2.025756e-02
+         mlp.0.weight_alpha 1.583599e-02
+        mlp.0.weight_median 1.536165e-02
+       out.weight_alpha_hat 1.525608e-02
+           mlp.0.weight_min 1.281529e-02
+           mlp.0.weight_std 1.186694e-02
+          mlp.2.weight_mean 1.059533e-02
+  out.weight_frobenius_norm 9.812165e-03
+     mlp.0.weight_alpha_hat 8.958944e-03
+          mlp.1.weight_mean 8.485606e-03
+           mlp.1.weight_min 8.135505e-03
+     mlp.1.weight_alpha_hat 8.123823e-03
+           mlp.0.weight_max 7.248063e-03
+   out.weight_spectral_norm 7.078607e-03
+     mlp.2.weight_alpha_hat 6.785286e-03
+           mlp.1.weight_max 5.410616e-03
+           out.weight_alpha 5.079296e-03
+             out.weight_min 4.955916e-03
+mlp.2.weight_frobenius_norm 4.937800e-03
+        mlp.1.weight_median 4.835170e-03
+         mlp.1.weight_alpha 4.335741e-03
+           mlp.1.weight_std 4.004663e-03
+mlp.0.weight_frobenius_norm 3.891568e-03
+        mlp.2.weight_median 3.842637e-03
+           mlp.2.weight_min 3.509903e-03
+             out.weight_max 3.459067e-03
+         mlp.2.weight_alpha 3.084862e-03
+                 input_size 2.896757e-03
+            out.weight_mean 2.879396e-03
+           mlp.2.weight_max 2.875735e-03
+          out.weight_median 2.861122e-03
+                    horizon 2.483167e-03
+           mlp.2.weight_std 1.042211e-03
+              learning_rate 8.589269e-04
+               total_params 6.982159e-04
+                hidden_size 1.934760e-04
+                 batch_size 1.007603e-04
+                       seed 3.868648e-10
+                  max_steps 0.000000e+00
+                 num_layers 0.000000e+00
+
+Execution Time: 61.883 seconds
