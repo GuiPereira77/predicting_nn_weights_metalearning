@@ -11,7 +11,7 @@ class WeightsPrinterCallback(pl.Callback):
 
     def on_train_end(self, trainer, pl_module):
         """Called at the end of training to evaluate and analyze weights."""
-        self._analyze_model_weights(pl_module)
+        # self._analyze_model_weights(pl_module)
         self._get_gradient_norm(pl_module)
         self._get_model_variance(pl_module)
         self._evaluate_weights(pl_module)
@@ -80,6 +80,7 @@ class WeightsPrinterCallback(pl.Callback):
         Returns:
         - None: The analysis results are stored in the 'stats' dictionary.
         """
+        # TODO: Finish this method.
         # Collect all weight matrices
         weight_matrices = []
         
@@ -120,6 +121,7 @@ class WeightsPrinterCallback(pl.Callback):
         """
         total_norm = 0
         for p in model.parameters():
+            if p.grad is None: continue
             param_norm = p.grad.data.norm(2)
             total_norm += param_norm.item() ** 2
         self.stats['gradient_norm'] = total_norm ** 0.5
