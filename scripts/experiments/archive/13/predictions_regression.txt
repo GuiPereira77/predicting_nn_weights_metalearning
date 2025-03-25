@@ -1,0 +1,149 @@
+Dataframe Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 8640 entries, 0 to 8639
+Data columns (total 52 columns):
+ #   Column                       Non-Null Count  Dtype  
+---  ------                       --------------  -----  
+ 0   id                           8640 non-null   object 
+ 1   dataset_name                 8640 non-null   object 
+ 2   dataset_group                8640 non-null   object 
+ 3   input_size                   8640 non-null   int64  
+ 4   horizon                      8640 non-null   int64  
+ 5   num_layers                   8640 non-null   int64  
+ 6   hidden_size                  8640 non-null   int64  
+ 7   max_steps                    8640 non-null   int64  
+ 8   learning_rate                8640 non-null   float64
+ 9   batch_size                   8640 non-null   int64  
+ 10  scaler_type                  8640 non-null   int32  
+ 11  total_params                 8640 non-null   int64  
+ 12  seed                         8640 non-null   int64  
+ 13  smape                        8640 non-null   float64
+ 14  is_better                    8640 non-null   bool   
+ 15  mlp.0.weight_mean            8640 non-null   float64
+ 16  mlp.0.weight_median          8640 non-null   float64
+ 17  mlp.0.weight_std             8640 non-null   float64
+ 18  mlp.0.weight_max             8640 non-null   float64
+ 19  mlp.0.weight_min             8640 non-null   float64
+ 20  mlp.0.weight_frobenius_norm  8640 non-null   float64
+ 21  mlp.0.weight_spectral_norm   8640 non-null   float64
+ 22  mlp.0.weight_alpha           8640 non-null   float64
+ 23  mlp.0.weight_alpha_hat       8640 non-null   float64
+ 24  mlp.1.weight_mean            8640 non-null   float64
+ 25  mlp.1.weight_median          8640 non-null   float64
+ 26  mlp.1.weight_std             8640 non-null   float64
+ 27  mlp.1.weight_max             8640 non-null   float64
+ 28  mlp.1.weight_min             8640 non-null   float64
+ 29  mlp.1.weight_frobenius_norm  8640 non-null   float64
+ 30  mlp.1.weight_spectral_norm   8640 non-null   float64
+ 31  mlp.1.weight_alpha           8640 non-null   float64
+ 32  mlp.1.weight_alpha_hat       8640 non-null   float64
+ 33  mlp.2.weight_mean            8640 non-null   float64
+ 34  mlp.2.weight_median          8640 non-null   float64
+ 35  mlp.2.weight_std             8640 non-null   float64
+ 36  mlp.2.weight_max             8640 non-null   float64
+ 37  mlp.2.weight_min             8640 non-null   float64
+ 38  mlp.2.weight_frobenius_norm  8640 non-null   float64
+ 39  mlp.2.weight_spectral_norm   8640 non-null   float64
+ 40  mlp.2.weight_alpha           8640 non-null   float64
+ 41  mlp.2.weight_alpha_hat       8640 non-null   float64
+ 42  out.weight_mean              8640 non-null   float64
+ 43  out.weight_median            8640 non-null   float64
+ 44  out.weight_std               8640 non-null   float64
+ 45  out.weight_max               8640 non-null   float64
+ 46  out.weight_min               8640 non-null   float64
+ 47  out.weight_frobenius_norm    8640 non-null   float64
+ 48  out.weight_spectral_norm     8640 non-null   float64
+ 49  out.weight_alpha             8640 non-null   float64
+ 50  out.weight_alpha_hat         8640 non-null   float64
+ 51  dataset_group_id             8640 non-null   object 
+dtypes: bool(1), float64(38), int32(1), int64(8), object(4)
+memory usage: 3.3+ MB
+None
+
+Mean and Std Scores:
+   Metric Mean Score Std Score
+mae_score     0.0564    0.0071
+mse_score     0.0078    0.0056
+ r2_score    -0.2155    0.6998
+
+Cross-Validation Results:
+Testing ['Tourism_Quarterly']:
+- mae_score: 0.0584
+- mse_score: 0.0052
+- r2_score: 0.6087
+None
+Testing ['Tourism_Monthly']:
+- mae_score: 0.0452
+- mse_score: 0.0028
+- r2_score: -0.0153
+None
+Testing ['M3_Quarterly']:
+- mae_score: 0.0563
+- mse_score: 0.0049
+- r2_score: 0.0913
+None
+Testing ['M3_Monthly']:
+- mae_score: 0.0523
+- mse_score: 0.0034
+- r2_score: -1.5357
+None
+Testing ['Gluonts_m1_quarterly']:
+- mae_score: 0.0573
+- mse_score: 0.0117
+- r2_score: 0.2158
+None
+Testing ['Gluonts_m1_monthly']:
+- mae_score: 0.0689
+- mse_score: 0.0185
+- r2_score: -0.6580
+None
+
+Average Feature Importance:
+                     Feature  Importance
+ mlp.0.weight_spectral_norm    0.131887
+                scaler_type    0.109023
+ mlp.1.weight_spectral_norm    0.091231
+ mlp.2.weight_spectral_norm    0.072445
+             out.weight_max    0.040686
+              learning_rate    0.037508
+             out.weight_std    0.033948
+           mlp.1.weight_max    0.032314
+     mlp.1.weight_alpha_hat    0.027774
+         mlp.1.weight_alpha    0.027117
+mlp.1.weight_frobenius_norm    0.026755
+          mlp.0.weight_mean    0.022409
+           mlp.2.weight_min    0.021660
+           mlp.1.weight_std    0.020257
+   out.weight_spectral_norm    0.019832
+     mlp.0.weight_alpha_hat    0.019645
+           mlp.1.weight_min    0.019122
+         mlp.0.weight_alpha    0.017074
+mlp.2.weight_frobenius_norm    0.015742
+             out.weight_min    0.015729
+          mlp.2.weight_mean    0.014251
+       out.weight_alpha_hat    0.013533
+          mlp.1.weight_mean    0.012923
+           mlp.0.weight_std    0.012833
+           mlp.0.weight_min    0.012800
+        mlp.0.weight_median    0.010976
+         mlp.2.weight_alpha    0.010957
+mlp.0.weight_frobenius_norm    0.010361
+          out.weight_median    0.010116
+        mlp.2.weight_median    0.010048
+               total_params    0.008988
+                    horizon    0.008569
+  out.weight_frobenius_norm    0.008419
+            out.weight_mean    0.008170
+     mlp.2.weight_alpha_hat    0.007868
+                 input_size    0.006328
+           mlp.2.weight_max    0.006158
+                hidden_size    0.006007
+        mlp.1.weight_median    0.005444
+           mlp.0.weight_max    0.005334
+           out.weight_alpha    0.005198
+           mlp.2.weight_std    0.002111
+                 batch_size    0.000448
+                  max_steps    0.000000
+                 num_layers    0.000000
+
+Execution Time: 3.032 seconds

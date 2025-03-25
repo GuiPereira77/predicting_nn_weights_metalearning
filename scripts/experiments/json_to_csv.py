@@ -21,6 +21,8 @@ for model_name, details in data.items():
         "batch_size": details["model"]["batch_size"],
         "scaler_type": details["model"]["scaler_type"],
         "total_params": details["model"]["total_params"],
+        # "gradient_norm": details["weights"]["gradient_norm"],
+        # "model_variance": details["weights"]["model_variance"],
         "seed": details["seed"],
         "smape": details["scores"]["smape"],
         "is_better": details["scores"]["is_better"]
@@ -28,19 +30,16 @@ for model_name, details in data.items():
 
     # Extract weight statistics for each layer
     for layer, weights in details["weights"].items():
-        record[f"{layer}_mean"] = weights["mean"]
-        record[f"{layer}_median"] = weights["median"]
-        record[f"{layer}_std"] = weights["std"]
-        record[f"{layer}_max"] = weights["max"]
-        record[f"{layer}_min"] = weights["min"]
-        record[f"{layer}_frobenius_norm"] = weights["frobenius_norm"]
-        record[f"{layer}_spectral_norm"] = weights["spectral_norm"]
-        record[f"{layer}_alpha"] = weights["alpha"]
-        record[f"{layer}_alpha_hat"] = weights["alpha_hat"]
+        if isinstance(weights, dict):
+            for stat in ["mean", "median", "std", "max", "min", "frobenius_norm", "spectral_norm", "alpha", "alpha_hat"]:#, "var"]:
+                record[f"{layer}_{stat}"] = weights.get(stat, None)
 
     records.append(record)
 
 df = pd.DataFrame(records)
+
+# Remove columns without unique values
+# df = df.loc[:, df.nunique() > 1]
 
 # Print metrics
 # print(df.shape)
@@ -49,7 +48,6 @@ df = pd.DataFrame(records)
 
 # Print unique values of 'seed'
 # print(df["seed"].unique())
-
 
 # Store the DataFrame in a CSV file
 df.to_csv("scripts/experiments/model_stats.csv", index=False)
