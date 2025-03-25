@@ -9,11 +9,15 @@ import torch
 class WeightsPrinterCallback(pl.Callback):
     stats = {}
 
+    def on_train_start(self, trainer, pl_module):
+        """Called at the beginning of training to get initial statistics."""
+        self._get_model_variance(pl_module, 'start')
+
     def on_train_end(self, trainer, pl_module):
         """Called at the end of training to evaluate and analyze weights."""
         # self._analyze_model_weights(pl_module)
-        self._get_gradient_norm(pl_module)
-        self._get_model_variance(pl_module)
+        # self._get_gradient_norm(pl_module)
+        self._get_model_variance(pl_module, 'end')
         self._evaluate_weights(pl_module)
 
     def _evaluate_weights(self, pl_module):
@@ -83,7 +87,7 @@ class WeightsPrinterCallback(pl.Callback):
         # TODO: Finish this method.
         # Collect all weight matrices
         weight_matrices = []
-        
+
         for name, param in model.named_parameters():
             if "weight" in name and param.requires_grad:  # Ensure it's a weight matrix
                 W = param.detach().cpu().numpy()
@@ -126,11 +130,11 @@ class WeightsPrinterCallback(pl.Callback):
             total_norm += param_norm.item() ** 2
         self.stats['gradient_norm'] = total_norm ** 0.5
 
-    def _get_model_variance(self, model):
+    def _get_model_variance(self, model, stage):
         """Compute the variance of the model weights."""
         all_weights = torch.cat([param.data.flatten() for param in model.parameters() if len(param.shape) > 1])
         model_variance = torch.var(all_weights)
-        self.stats['model_variance'] = model_variance.item()
+        self.stats['model_variance_'+stage] = model_variance.item()
 
     # def plot_eigenvalues_histogram(self, eigenvalues, alpha, xmin, layer_name):
     #     """Plots and saves the histogram of eigenvalues with power-law fit."""
