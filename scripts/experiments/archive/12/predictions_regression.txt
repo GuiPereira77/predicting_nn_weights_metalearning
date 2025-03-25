@@ -1,0 +1,139 @@
+Dataframe Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 1440 entries, 0 to 1439
+Data columns (total 58 columns):
+ #   Column                       Non-Null Count  Dtype  
+---  ------                       --------------  -----  
+ 0   id                           1440 non-null   object 
+ 1   dataset_name                 1440 non-null   object 
+ 2   dataset_group                1440 non-null   object 
+ 3   input_size                   1440 non-null   int64  
+ 4   horizon                      1440 non-null   int64  
+ 5   num_layers                   1440 non-null   int64  
+ 6   hidden_size                  1440 non-null   int64  
+ 7   max_steps                    1440 non-null   int64  
+ 8   learning_rate                1440 non-null   float64
+ 9   batch_size                   1440 non-null   int64  
+ 10  scaler_type                  1440 non-null   int32  
+ 11  total_params                 1440 non-null   int64  
+ 12  gradient_norm                1440 non-null   float64
+ 13  model_variance               1440 non-null   float64
+ 14  seed                         1440 non-null   int64  
+ 15  smape                        1440 non-null   float64
+ 16  is_better                    1440 non-null   bool   
+ 17  mlp.0.weight_mean            1440 non-null   float64
+ 18  mlp.0.weight_median          1440 non-null   float64
+ 19  mlp.0.weight_std             1440 non-null   float64
+ 20  mlp.0.weight_max             1440 non-null   float64
+ 21  mlp.0.weight_min             1440 non-null   float64
+ 22  mlp.0.weight_frobenius_norm  1440 non-null   float64
+ 23  mlp.0.weight_spectral_norm   1440 non-null   float64
+ 24  mlp.0.weight_alpha           1440 non-null   float64
+ 25  mlp.0.weight_alpha_hat       1440 non-null   float64
+ 26  mlp.0.weight_var             1440 non-null   float64
+ 27  mlp.1.weight_mean            1440 non-null   float64
+ 28  mlp.1.weight_median          1440 non-null   float64
+ 29  mlp.1.weight_std             1440 non-null   float64
+ 30  mlp.1.weight_max             1440 non-null   float64
+ 31  mlp.1.weight_min             1440 non-null   float64
+ 32  mlp.1.weight_frobenius_norm  1440 non-null   float64
+ 33  mlp.1.weight_spectral_norm   1440 non-null   float64
+ 34  mlp.1.weight_alpha           1440 non-null   float64
+ 35  mlp.1.weight_alpha_hat       1440 non-null   float64
+ 36  mlp.1.weight_var             1440 non-null   float64
+ 37  mlp.2.weight_mean            1440 non-null   float64
+ 38  mlp.2.weight_median          1440 non-null   float64
+ 39  mlp.2.weight_std             1440 non-null   float64
+ 40  mlp.2.weight_max             1440 non-null   float64
+ 41  mlp.2.weight_min             1440 non-null   float64
+ 42  mlp.2.weight_frobenius_norm  1440 non-null   float64
+ 43  mlp.2.weight_spectral_norm   1440 non-null   float64
+ 44  mlp.2.weight_alpha           1440 non-null   float64
+ 45  mlp.2.weight_alpha_hat       1440 non-null   float64
+ 46  mlp.2.weight_var             1440 non-null   float64
+ 47  out.weight_mean              1440 non-null   float64
+ 48  out.weight_median            1440 non-null   float64
+ 49  out.weight_std               1440 non-null   float64
+ 50  out.weight_max               1440 non-null   float64
+ 51  out.weight_min               1440 non-null   float64
+ 52  out.weight_frobenius_norm    1440 non-null   float64
+ 53  out.weight_spectral_norm     1440 non-null   float64
+ 54  out.weight_alpha             1440 non-null   float64
+ 55  out.weight_alpha_hat         1440 non-null   float64
+ 56  out.weight_var               1440 non-null   float64
+ 57  dataset_group_id             1440 non-null   object 
+dtypes: bool(1), float64(44), int32(1), int64(8), object(4)
+memory usage: 637.2+ KB
+None
+
+Mean MAE: 0.0000
+Std MAE: 0.0000
+
+Cross-Validation Results:
+Testing ['Gluonts_m1_monthly'] MAE: 0.0000
+None
+Testing ['Gluonts_m1_monthly'] MAE: 0.0001
+None
+Testing ['Gluonts_m1_monthly'] MAE: 0.0000
+None
+Testing ['Gluonts_m1_monthly'] MAE: 0.0000
+None
+Testing ['Gluonts_m1_monthly'] MAE: 0.0001
+None
+
+Average Feature Importance:
+                     Feature  Importance
+           mlp.0.weight_min    0.326477
+                scaler_type    0.175835
+   out.weight_spectral_norm    0.054528
+ mlp.2.weight_spectral_norm    0.043995
+             out.weight_std    0.037799
+             out.weight_var    0.034887
+     mlp.0.weight_alpha_hat    0.024564
+           mlp.1.weight_min    0.023933
+         mlp.0.weight_alpha    0.023513
+           mlp.0.weight_max    0.021875
+mlp.2.weight_frobenius_norm    0.021673
+         mlp.1.weight_alpha    0.020131
+mlp.0.weight_frobenius_norm    0.017640
+mlp.1.weight_frobenius_norm    0.014779
+           out.weight_alpha    0.012640
+         mlp.2.weight_alpha    0.011566
+       out.weight_alpha_hat    0.009172
+ mlp.1.weight_spectral_norm    0.008228
+           mlp.2.weight_min    0.008163
+        mlp.0.weight_median    0.008044
+             out.weight_min    0.007563
+          mlp.1.weight_mean    0.006786
+           mlp.2.weight_max    0.006348
+  out.weight_frobenius_norm    0.006209
+ mlp.0.weight_spectral_norm    0.006159
+           mlp.2.weight_var    0.004887
+             out.weight_max    0.004805
+     mlp.1.weight_alpha_hat    0.004755
+           mlp.0.weight_std    0.004671
+          mlp.2.weight_mean    0.004394
+           mlp.1.weight_std    0.004057
+           mlp.1.weight_max    0.004003
+            out.weight_mean    0.003667
+        mlp.2.weight_median    0.003616
+           mlp.0.weight_var    0.003599
+     mlp.2.weight_alpha_hat    0.003564
+           mlp.2.weight_std    0.003519
+          out.weight_median    0.003353
+              learning_rate    0.003351
+           mlp.1.weight_var    0.003060
+          mlp.0.weight_mean    0.002936
+             model_variance    0.002358
+        mlp.1.weight_median    0.001220
+                hidden_size    0.000706
+               total_params    0.000553
+                 batch_size    0.000418
+                       seed    0.000002
+                  max_steps    0.000000
+              gradient_norm    0.000000
+                    horizon    0.000000
+                 num_layers    0.000000
+                 input_size    0.000000
+
+Execution Time: 7.928 seconds

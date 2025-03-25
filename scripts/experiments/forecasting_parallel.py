@@ -31,7 +31,7 @@ device = "gpu" if torch.cuda.is_available() else "cpu"
 logger.info(f"Using device: {device.upper()}")
 if device == "gpu":
     logger.info(f"GPU: {torch.cuda.get_device_name()}")
-    torch.set_float32_matmul_precision('high')  # Options: 'high', 'medium', or 'default'
+    torch.set_float32_matmul_precision('medium')  # Options: 'high', 'medium', or 'default'
 
 # ---- Variables ----
 # ---- Hyperparameter Combinations using itertools.product ----
@@ -50,7 +50,6 @@ hyperparameter_combinations = product(
 
 results = {}
 results_lock = Lock()
-# num_workers = os.cpu_count()
 num_workers = 4
 
 def train_model(data_name, group, hidden_size, max_steps, num_layers, learning_rate, batch_size, scaler_type, seed):
@@ -83,6 +82,7 @@ def train_model(data_name, group, hidden_size, max_steps, num_layers, learning_r
         fcst = nf.predict()
         logger.info(f"Model training completed.")
 
+        torch.cuda.synchronize()
         cv = fcst.merge(sfdf, on=['unique_id', 'ds'])
 
         # ---- Model Evaluation ----
@@ -153,6 +153,8 @@ for data_name, group in DATA_GROUPS:
         logger.error(f"Error loading data: {e}")
         continue  # Continue to the next data group
 
+    torch.cuda.synchronize()
+
     # ---- Model Training for Seasonal Naive ----
     try:
         logger.info("Starting Seasonal Naive model training")
@@ -184,13 +186,13 @@ for data_name, group in DATA_GROUPS:
             except Exception as e:
                 logger.error(f"Error during training: {e}")
 
-# ---- Save Results to JSON File ----
-output_dir = "./scripts/experiments"
-output_file = os.path.join(output_dir, "parallel_model_stats.json")
+    # ---- Save Results to JSON File ----
+    output_dir = "./scripts/experiments"
+    output_file = os.path.join(output_dir, "parallel_model_stats.json")
 
-try:
-    with open(output_file, "w") as f:
-        json.dump(results, f, indent=4)
-    logger.info(f"Results saved to {output_file}")
-except Exception as e:
-    logger.error(f"Error saving results to {output_file}: {e}")
+    try:
+        with open(output_file, "w") as f:
+            json.dump(results, f, indent=4)
+        logger.info(f"Results saved to {output_file}")
+    except Exception as e:
+        logger.error(f"Error saving results to {output_file}: {e}")

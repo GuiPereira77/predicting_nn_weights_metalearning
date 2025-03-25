@@ -32,13 +32,13 @@ if device == "gpu":
 
 # ---- Variables ----
 # ---- Hyperparameter Combinations using itertools.product ----
-HIDDEN_SIZE_LIST = [8, 16, 32, 64]
+HIDDEN_SIZE_LIST = [8, 16, 32]#, 64]
 MAX_STEPS_LIST = [500]
 NUM_LAYERS_LIST = [3]
-LEARNING_RATE_LIST = [1e-3, 5e-4, 1e-4]
-BATCH_SIZE_LIST = [16, 32, 64]
-SCALER_TYPE_LIST = ['identity', 'standard', 'robust', 'minmax']
-SEED_LIST = [42, 123, 456, 789, 1011, 1213, 1415, 1617, 1819, 2021]
+LEARNING_RATE_LIST = [1e-3]#, 5e-4, 1e-4]
+BATCH_SIZE_LIST = [16]#, 32, 64]
+SCALER_TYPE_LIST = ['identity']#, 'standard', 'robust', 'minmax']
+SEED_LIST = [42, 123, 456, 789, 1011]#, 1213, 1415, 1617, 1819, 2021]
 
 results = {}
 
@@ -86,7 +86,7 @@ for data_name, group in DATA_GROUPS:
         torch.manual_seed(seed)
         if torch.cuda.is_available():
             torch.cuda.manual_seed(seed)
-        
+
         # Create a new MLP model with the current hyperparameters
         wp_cb = WeightsPrinterCallback()
         model = MLP(
@@ -163,9 +163,9 @@ for data_name, group in DATA_GROUPS:
 
         logger.info(f"Model statistics dictionary created for {key}")
 
-        # ---- Save Results to JSON File ----
-        output_dir = "./scripts/experiments"
-        output_file = os.path.join(output_dir, "model_stats.json")
+    # ---- Save Results to JSON File ----
+    output_dir = "./scripts/experiments"
+    output_file = os.path.join(output_dir, "model_stats.json")
 
     try:
         with open(output_file, "w") as f:
