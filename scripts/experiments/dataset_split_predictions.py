@@ -2,11 +2,11 @@ import pandas as pd
 import numpy as np
 import sys
 import time
-from sklearn.model_selection import GroupKFold, KFold
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report, mean_absolute_error, roc_auc_score, log_loss, f1_score, mean_squared_error, r2_score
 from xgboost import XGBRFClassifier, XGBRFRegressor
+import joblib
 
 # Convert JSON to CSV
 file_to_run = "scripts/experiments/json_to_csv.py"
@@ -35,7 +35,6 @@ y = df["is_better"] if CLASSIFICATION else df["smape"]
 # Group K-Fold for Cross-Validation
 num_groups = df["dataset_group_id"].nunique()
 cv = GroupKFold(n_splits=num_groups)
-# cv = KFold(n_splits=5, shuffle=True, random_state=42)
 
 scores = {}
 all_reports = []
@@ -68,7 +67,6 @@ def evaluate_model(y_test, y_pred, classification):
 start_time = time.time()
 
 for fold, (train_idx, test_idx) in enumerate(cv.split(X, y, groups=df["dataset_group_id"])):
-# for fold, (train_idx, test_idx) in enumerate(cv.split(X, y)):
     X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
     y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
 
@@ -123,3 +121,8 @@ sys.stdout.close()
 sys.stdout = sys.__stdout__
 
 print("Cross-validation results saved to:", log_file)
+
+# Export the model
+model_file = f"scripts/experiments/model_{'classification' if CLASSIFICATION else 'regression'}.pkl"
+joblib.dump(model, model_file)
+print(f"Model saved to: {model_file}")

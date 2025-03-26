@@ -1,0 +1,204 @@
+Dataframe Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 8640 entries, 0 to 8639
+Data columns (total 52 columns):
+ #   Column                       Non-Null Count  Dtype  
+---  ------                       --------------  -----  
+ 0   id                           8640 non-null   object 
+ 1   dataset_name                 8640 non-null   object 
+ 2   dataset_group                8640 non-null   object 
+ 3   input_size                   8640 non-null   int64  
+ 4   horizon                      8640 non-null   int64  
+ 5   num_layers                   8640 non-null   int64  
+ 6   hidden_size                  8640 non-null   int64  
+ 7   max_steps                    8640 non-null   int64  
+ 8   learning_rate                8640 non-null   float64
+ 9   batch_size                   8640 non-null   int64  
+ 10  scaler_type                  8640 non-null   int32  
+ 11  total_params                 8640 non-null   int64  
+ 12  seed                         8640 non-null   int64  
+ 13  smape                        8640 non-null   float64
+ 14  is_better                    8640 non-null   bool   
+ 15  mlp.0.weight_mean            8640 non-null   float64
+ 16  mlp.0.weight_median          8640 non-null   float64
+ 17  mlp.0.weight_std             8640 non-null   float64
+ 18  mlp.0.weight_max             8640 non-null   float64
+ 19  mlp.0.weight_min             8640 non-null   float64
+ 20  mlp.0.weight_frobenius_norm  8640 non-null   float64
+ 21  mlp.0.weight_spectral_norm   8640 non-null   float64
+ 22  mlp.0.weight_alpha           8640 non-null   float64
+ 23  mlp.0.weight_alpha_hat       8640 non-null   float64
+ 24  mlp.1.weight_mean            8640 non-null   float64
+ 25  mlp.1.weight_median          8640 non-null   float64
+ 26  mlp.1.weight_std             8640 non-null   float64
+ 27  mlp.1.weight_max             8640 non-null   float64
+ 28  mlp.1.weight_min             8640 non-null   float64
+ 29  mlp.1.weight_frobenius_norm  8640 non-null   float64
+ 30  mlp.1.weight_spectral_norm   8640 non-null   float64
+ 31  mlp.1.weight_alpha           8640 non-null   float64
+ 32  mlp.1.weight_alpha_hat       8640 non-null   float64
+ 33  mlp.2.weight_mean            8640 non-null   float64
+ 34  mlp.2.weight_median          8640 non-null   float64
+ 35  mlp.2.weight_std             8640 non-null   float64
+ 36  mlp.2.weight_max             8640 non-null   float64
+ 37  mlp.2.weight_min             8640 non-null   float64
+ 38  mlp.2.weight_frobenius_norm  8640 non-null   float64
+ 39  mlp.2.weight_spectral_norm   8640 non-null   float64
+ 40  mlp.2.weight_alpha           8640 non-null   float64
+ 41  mlp.2.weight_alpha_hat       8640 non-null   float64
+ 42  out.weight_mean              8640 non-null   float64
+ 43  out.weight_median            8640 non-null   float64
+ 44  out.weight_std               8640 non-null   float64
+ 45  out.weight_max               8640 non-null   float64
+ 46  out.weight_min               8640 non-null   float64
+ 47  out.weight_frobenius_norm    8640 non-null   float64
+ 48  out.weight_spectral_norm     8640 non-null   float64
+ 49  out.weight_alpha             8640 non-null   float64
+ 50  out.weight_alpha_hat         8640 non-null   float64
+ 51  dataset_group_id             8640 non-null   object 
+dtypes: bool(1), float64(38), int32(1), int64(8), object(4)
+memory usage: 3.3+ MB
+None
+
+Mean and Std Scores:
+        Metric Mean Score Std Score
+     acc_score     0.5150    0.1294
+ roc_auc_score     0.6255    0.0856
+log_loss_score    17.4795    4.6636
+      f1_score     0.5061    0.1846
+
+Cross-Validation Results:
+Testing ['Tourism_Quarterly']:
+- acc_score: 0.5556
+- roc_auc_score: 0.7288
+- log_loss_score: 16.0194
+- f1_score: 0.4483
+              precision    recall  f1-score   support
+
+       False       1.00      0.46      0.63      1180
+        True       0.29      1.00      0.45       260
+
+    accuracy                           0.56      1440
+   macro avg       0.64      0.73      0.54      1440
+weighted avg       0.87      0.56      0.60      1440
+
+Testing ['Tourism_Monthly']:
+- acc_score: 0.3750
+- roc_auc_score: 0.6538
+- log_loss_score: 22.5273
+- f1_score: 0.2373
+              precision    recall  f1-score   support
+
+       False       1.00      0.31      0.47      1300
+        True       0.13      1.00      0.24       140
+
+    accuracy                           0.38      1440
+   macro avg       0.57      0.65      0.35      1440
+weighted avg       0.92      0.38      0.45      1440
+
+Testing ['M3_Quarterly']:
+- acc_score: 0.6875
+- roc_auc_score: 0.7171
+- log_loss_score: 11.2636
+- f1_score: 0.6763
+              precision    recall  f1-score   support
+
+       False       0.58      0.88      0.70       590
+        True       0.87      0.55      0.68       850
+
+    accuracy                           0.69      1440
+   macro avg       0.72      0.72      0.69      1440
+weighted avg       0.75      0.69      0.69      1440
+
+Testing ['M3_Monthly']:
+- acc_score: 0.3125
+- roc_auc_score: 0.5366
+- log_loss_score: 24.7800
+- f1_score: 0.3172
+              precision    recall  f1-score   support
+
+       False       0.19      0.88      0.31       250
+        True       0.88      0.19      0.32      1190
+
+    accuracy                           0.31      1440
+   macro avg       0.54      0.54      0.31      1440
+weighted avg       0.76      0.31      0.32      1440
+
+Testing ['Gluonts_m1_quarterly']:
+- acc_score: 0.5833
+- roc_auc_score: 0.4985
+- log_loss_score: 15.0182
+- f1_score: 0.7273
+              precision    recall  f1-score   support
+
+       False       0.07      0.40      0.12       100
+        True       0.93      0.60      0.73      1340
+
+    accuracy                           0.58      1440
+   macro avg       0.50      0.50      0.42      1440
+weighted avg       0.87      0.58      0.68      1440
+
+Testing ['Gluonts_m1_monthly']:
+- acc_score: 0.5764
+- roc_auc_score: 0.6179
+- log_loss_score: 15.2685
+- f1_score: 0.6303
+              precision    recall  f1-score   support
+
+       False       0.39      0.72      0.50       430
+        True       0.81      0.51      0.63      1010
+
+    accuracy                           0.58      1440
+   macro avg       0.60      0.62      0.57      1440
+weighted avg       0.69      0.58      0.59      1440
+
+
+Average Feature Importance:
+                     Feature  Importance
+       out.weight_alpha_hat    0.158862
+           mlp.0.weight_min    0.067980
+ mlp.2.weight_spectral_norm    0.048291
+        mlp.1.weight_median    0.034961
+          mlp.1.weight_mean    0.033964
+ mlp.1.weight_spectral_norm    0.028450
+  out.weight_frobenius_norm    0.026957
+     mlp.2.weight_alpha_hat    0.026599
+           mlp.0.weight_max    0.026565
+           out.weight_alpha    0.024190
+     mlp.1.weight_alpha_hat    0.023432
+                 input_size    0.022983
+          mlp.2.weight_mean    0.021909
+ mlp.0.weight_spectral_norm    0.021471
+mlp.0.weight_frobenius_norm    0.020723
+mlp.1.weight_frobenius_norm    0.020302
+           mlp.1.weight_min    0.019815
+             out.weight_min    0.019054
+           mlp.2.weight_std    0.018898
+           mlp.1.weight_max    0.018877
+           mlp.0.weight_std    0.018840
+     mlp.0.weight_alpha_hat    0.018785
+         mlp.0.weight_alpha    0.018006
+             out.weight_max    0.017519
+mlp.2.weight_frobenius_norm    0.016967
+   out.weight_spectral_norm    0.016940
+           mlp.1.weight_std    0.016631
+                scaler_type    0.016082
+          out.weight_median    0.015088
+        mlp.0.weight_median    0.014732
+         mlp.2.weight_alpha    0.014453
+         mlp.1.weight_alpha    0.014386
+            out.weight_mean    0.014334
+           mlp.2.weight_max    0.013010
+           mlp.2.weight_min    0.012808
+                    horizon    0.012521
+          mlp.0.weight_mean    0.012431
+               total_params    0.011981
+        mlp.2.weight_median    0.011890
+             out.weight_std    0.008525
+                hidden_size    0.007488
+              learning_rate    0.006881
+                 batch_size    0.005418
+                  max_steps    0.000000
+                 num_layers    0.000000
+
+Execution Time: 2.422 seconds

@@ -20,8 +20,9 @@ from src.callbacks.weights import WeightsPrinterCallback
 from src.utils.load_data.config import DATASETS, DATA_GROUPS
 
 # ---- Configure logging ----
-logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
 
 # ---- Detect GPU availability ----
 device = "gpu" if torch.cuda.is_available() else "cpu"
@@ -32,13 +33,13 @@ if device == "gpu":
 
 # ---- Variables ----
 # ---- Hyperparameter Combinations using itertools.product ----
-HIDDEN_SIZE_LIST = [8, 16, 32]#, 64]
+HIDDEN_SIZE_LIST = [8, 16, 32, 64]
 MAX_STEPS_LIST = [500]
 NUM_LAYERS_LIST = [3]
-LEARNING_RATE_LIST = [1e-3]#, 5e-4, 1e-4]
-BATCH_SIZE_LIST = [16]#, 32, 64]
-SCALER_TYPE_LIST = ['identity']#, 'standard', 'robust', 'minmax']
-SEED_LIST = [42, 123, 456, 789, 1011]#, 1213, 1415, 1617, 1819, 2021]
+LEARNING_RATE_LIST = [1e-3, 5e-4, 1e-4]
+BATCH_SIZE_LIST = [16, 32, 64]
+SCALER_TYPE_LIST = ['identity', 'standard', 'robust', 'minmax']
+SEED_LIST = [42, 123, 456, 789, 1011, 1213, 1415, 1617, 1819, 2021]
 
 results = {}
 
