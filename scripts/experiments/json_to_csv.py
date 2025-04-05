@@ -42,7 +42,7 @@ df = pd.DataFrame(records)
 # df = df.loc[:, df.nunique() > 1]
 
 # Print metrics
-# print(df.shape)
+print(df.shape)
 # print(df.filter(like="alpha_hat").describe())
 # print(df["is_better"].value_counts(normalize=True))
 

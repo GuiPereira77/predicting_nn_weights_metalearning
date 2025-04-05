@@ -4,49 +4,30 @@ import sys
 import time
 from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import accuracy_score, classification_report, mean_absolute_error, roc_auc_score, log_loss, f1_score, mean_squared_error, r2_score
+from sklearn.metrics import (
+    accuracy_score, classification_report, mean_absolute_error, 
+    roc_auc_score, log_loss, f1_score, mean_squared_error, r2_score
+)
 from xgboost import XGBRFClassifier, XGBRFRegressor
 import joblib
 
-# Convert JSON to CSV
-file_to_run = "scripts/experiments/json_to_csv.py"
-with open(file_to_run, "r") as file:
-    exec(file.read())
+def load_and_preprocess_data(csv_path):
+    """Load and preprocess the dataset."""
+    df = pd.read_csv(csv_path)
+    df["dataset_group_id"] = df["dataset_name"].astype(str) + "_" + df["dataset_group"].astype(str)
+    encoder = LabelEncoder()
+    df["scaler_type"] = encoder.fit_transform(df["scaler_type"])
+    df.fillna(0, inplace=True)
+    return df
 
-# Load CSV file
-df = pd.read_csv("scripts/experiments/model_stats.csv")
-
-# Create unique group identifier for dataset_name & dataset_group
-df["dataset_group_id"] = df["dataset_name"].astype(str) + "_" + df["dataset_group"].astype(str)
-
-# Encode categorical variables
-encoder = LabelEncoder()
-df["scaler_type"] = encoder.fit_transform(df["scaler_type"])
-
-# Handle missing values
-df.fillna(0, inplace=True)
-
-# Define Features & Target
-X = df.drop(columns=["id", "smape", "is_better", "dataset_name", "dataset_group", "dataset_group_id", "seed"])
-
-CLASSIFICATION = False
-y = df["is_better"] if CLASSIFICATION else df["smape"]
-
-# Group K-Fold for Cross-Validation
-num_groups = df["dataset_group_id"].nunique()
-cv = GroupKFold(n_splits=num_groups)
-
-scores = {}
-all_reports = []
-feature_importances = []
-
-# Define model and evaluation metric based on the task
-if CLASSIFICATION:
-    model = XGBRFClassifier(n_estimators=200, random_state=42)
-else:
-    model = XGBRFRegressor(n_estimators=200, random_state=42)
+def define_model(classification):
+    """Define the model based on the task type."""
+    if classification:
+        return XGBRFClassifier(n_estimators=200, random_state=42)
+    return XGBRFRegressor(n_estimators=200, random_state=42)
 
 def evaluate_model(y_test, y_pred, classification):
+    """Evaluate the model and return scores."""
     if classification:
         score_dict = {
             "acc_score": accuracy_score(y_test, y_pred),
@@ -62,67 +43,90 @@ def evaluate_model(y_test, y_pred, classification):
             "r2_score": r2_score(y_test, y_pred)
         }
         return score_dict, None
-    
-# Start Time
-start_time = time.time()
 
-for fold, (train_idx, test_idx) in enumerate(cv.split(X, y, groups=df["dataset_group_id"])):
-    X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
-    y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+def cross_validate_model(df, X, y, model, classification):
+    """Perform cross-validation and return results."""
+    cv = GroupKFold(n_splits=df["dataset_group_id"].nunique())
+    scores = {}
+    all_reports = []
+    feature_importances = []
 
-    # Print test dataset_group_id
-    test_group_id = df.iloc[test_idx]["dataset_group_id"].unique()
+    for fold, (train_idx, test_idx) in enumerate(cv.split(X, y, groups=df["dataset_group_id"])):
+        X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
+        y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+        test_group_id = df.iloc[test_idx]["dataset_group_id"].unique()
 
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
 
-    score_dict, report = evaluate_model(y_test, y_pred, CLASSIFICATION)
-    
-    all_reports.append(f"Testing {test_group_id}:")
-    for score_name, score in score_dict.items():
-        scores[score_name] = scores.get(score_name, []) + [score]
-        all_reports.append(f"- {score_name}: {score:.4f}")
-    all_reports.append(report)
+        score_dict, report = evaluate_model(y_test, y_pred, classification)
+        all_reports.append(f"Testing {test_group_id}:")
+        for score_name, score in score_dict.items():
+            scores[score_name] = scores.get(score_name, []) + [score]
+            all_reports.append(f"- {score_name}: {score:.4f}")
+        all_reports.append(report)
 
-    # Store feature importance for averaging
-    feature_importances.append(model.feature_importances_)
+        feature_importances.append(model.feature_importances_)
 
-# Compute mean and std deviation of all the scores
-mean_std_df = pd.DataFrame({
-    "Metric": scores.keys(),
-    "Mean Score": [f"{np.mean(scores_list):.4f}" for scores_list in scores.values()],
-    "Std Score": [f"{np.std(scores_list):.4f}" for scores_list in scores.values()]
-})
+    return scores, all_reports, feature_importances
 
-# Compute average feature importance
-avg_feature_importance = np.mean(feature_importances, axis=0)
-feature_importance_df = pd.DataFrame({"Feature": X.columns, "Importance": avg_feature_importance})
-feature_importance_df = feature_importance_df.sort_values(by="Importance", ascending=False)
+def save_results(log_file, df, mean_std_df, all_reports, feature_importance_df, execution_time):
+    """Save results to a log file."""
+    with open(log_file, "w") as log:
+        sys.stdout = log
+        print("Dataframe Info:")
+        print(df.info())
+        print("\nMean and Std Scores:")
+        print(mean_std_df.to_string(index=False))
+        print("\nCross-Validation Results:")
+        for report in all_reports:
+            print(report)
+        print("\nAverage Feature Importance:\n", feature_importance_df.to_string(index=False))
+        print(f"\nExecution Time: {execution_time:.3f} seconds")
+        sys.stdout = sys.__stdout__
 
-# Save results to log file
-log_file = f"scripts/experiments/predictions_{'classification' if CLASSIFICATION else 'regression'}.txt"
-sys.stdout = open(log_file, "w")
+def main():
+    # Configuration
+    csv_path = "scripts/experiments/model_stats.csv"
+    classification = False
+    log_file = f"scripts/experiments/predictions_{'classification' if classification else 'regression'}.txt"
+    model_file = f"scripts/experiments/model_{'classification' if classification else 'regression'}.pkl"
 
-print("Dataframe Info:")
-print(df.info())
+    # Load and preprocess data
+    df = load_and_preprocess_data(csv_path)
+    X = df.drop(columns=["id", "smape", "is_better", "dataset_name", "dataset_group", "dataset_group_id", "seed"])
+    y = df["is_better"] if classification else df["smape"]
 
-print("\nMean and Std Scores:")
-print(mean_std_df.to_string(index=False))
-print("\nCross-Validation Results:")
-for report in all_reports:
-    print(report)
+    # Define model
+    model = define_model(classification)
 
-print("\nAverage Feature Importance:\n", feature_importance_df.to_string(index=False))
+    # Start timer
+    start_time = time.time()
 
-print(f"\nExecution Time: {time.time() - start_time:.3f} seconds")
+    # Perform cross-validation
+    scores, all_reports, feature_importances = cross_validate_model(df, X, y, model, classification)
 
-# Reset stdout back to default
-sys.stdout.close()
-sys.stdout = sys.__stdout__
+    # Stop timer
+    execution_time = time.time() - start_time
 
-print("Cross-validation results saved to:", log_file)
+    # Compute mean and std deviation of scores
+    mean_std_df = pd.DataFrame({
+        "Metric": scores.keys(),
+        "Mean Score": [f"{np.mean(scores_list):.4f}" for scores_list in scores.values()],
+        "Std Score": [f"{np.std(scores_list):.4f}" for scores_list in scores.values()]
+    })
 
-# Export the model
-model_file = f"scripts/experiments/model_{'classification' if CLASSIFICATION else 'regression'}.pkl"
-joblib.dump(model, model_file)
-print(f"Model saved to: {model_file}")
+    # Compute average feature importance
+    avg_feature_importance = np.mean(feature_importances, axis=0)
+    feature_importance_df = pd.DataFrame({"Feature": X.columns, "Importance": avg_feature_importance})
+    feature_importance_df = feature_importance_df.sort_values(by="Importance", ascending=False)
+
+    # Save results
+    save_results(log_file, df, mean_std_df, all_reports, feature_importance_df, execution_time)
+
+    # Export the model
+    joblib.dump(model, model_file)
+    print(f"Model saved to: {model_file}")
+
+if __name__ == "__main__":
+    main()
