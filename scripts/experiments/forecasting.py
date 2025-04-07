@@ -69,18 +69,17 @@ def train_seasonal_naive(train, test, freq_str, freq_int, horizon):
 
 def generate_hyperparameter_combinations():
     """ Generate all combinations of hyperparameters. """
-    HIDDEN_SIZE_LIST = [8, 16, 32, 64]
-    MAX_STEPS_LIST = [500]
-    NUM_LAYERS_LIST = [3]
-    LEARNING_RATE_LIST = [1e-3, 5e-4, 1e-4]
-    BATCH_SIZE_LIST = [16, 32, 64]
-    SCALER_TYPE_LIST = ['identity', 'standard', 'robust', 'minmax']
-    SEED_LIST = [42, 123, 456, 789, 1011, 1213, 1415, 1617, 1819, 2021]
+    hyperparameters = {
+        "hidden_size": [8, 16, 32, 64],
+        "max_steps": [500],
+        "num_layers": [3],
+        "learning_rate": [1e-3, 5e-4, 1e-4],
+        "batch_size": [16, 32, 64],
+        "scaler_type": ['identity', 'standard', 'robust', 'minmax'],
+        "seed": [42, 123, 456, 789, 1011, 1213, 1415, 1617, 1819, 2021],
+    }
 
-    return product(
-        HIDDEN_SIZE_LIST, MAX_STEPS_LIST, NUM_LAYERS_LIST, 
-        LEARNING_RATE_LIST, BATCH_SIZE_LIST, SCALER_TYPE_LIST, SEED_LIST
-    )
+    return product(*hyperparameters.values())
 
 def display_model_info(model, seed):
     """ Return the model information as a string. """
@@ -93,13 +92,13 @@ def display_model_info(model, seed):
         # f"Max Steps: {model.max_steps}",
         f"Learning Rate: {model.learning_rate}",
         f"Batch Size: {model.batch_size}",
-        f"Scaler Type: {model.scaler_type}",
+        # f"Scaler Type: {model.scaler_type}",
         # f"Total Params: {sum(p.numel() for p in model.parameters())}",
         f"Current Seed: {seed}"
     ]
     return "\n".join(info)
 
-def train_mlp_model(train, sfdf, hyperparameters, freq_str, n_lags, horizon, sn_smape_score):
+def train_mlp_models(train, sfdf, hyperparameters, freq_str, n_lags, horizon, sn_smape_score):
     """ Train the MLP model with the given hyperparameters. """
     results = {}
     for hidden_size, max_steps, num_layers, learning_rate, batch_size, scaler_type, seed in hyperparameters:
@@ -133,12 +132,13 @@ def train_mlp_model(train, sfdf, hyperparameters, freq_str, n_lags, horizon, sn_
             continue
 
         cv = fcst.merge(sfdf, on=['unique_id', 'ds'])
-        scores = evaluate_model(cv, model, sn_smape_score)
+        scores = evaluate_model(cv, sn_smape_score)
         key = generate_result_key(data_name, group, hidden_size, learning_rate, batch_size, scaler_type, seed)
-        results[key] = create_result_entry(data_name, group, model, seed, scores, wp_cb)
+        results[key] = create_result_entry(data_name, group, model, scaler_type, seed, scores, wp_cb)
+        # print(f"Results for {key}: {results[key]}")
     return results
 
-def evaluate_model(cv, model, sn_smape_score):
+def evaluate_model(cv, sn_smape_score, model='MLP'):
     """ Evaluate the model using various metrics. """
     mse_score = mean_squared_error(cv['y'], cv[model])
     mae_score = mean_absolute_error(cv['y'], cv[model])
@@ -157,7 +157,7 @@ def generate_result_key(data_name, group, hidden_size, learning_rate, batch_size
     """ Generate a unique key for the result entry. """
     return f"{data_name}_{group}_hidden_size_{hidden_size}_learning_rate_{learning_rate}_batch_size_{batch_size}_scaler_type_{scaler_type}_seed_{seed}"
 
-def create_result_entry(data_name, group, model, seed, scores, wp_cb):
+def create_result_entry(data_name, group, model, scaler_type, seed, scores, wp_cb):
     """ Create a result entry for the model. """
     return {
         "dataset": {"name": data_name, "group": group},
@@ -170,7 +170,7 @@ def create_result_entry(data_name, group, model, seed, scores, wp_cb):
             "max_steps": model.max_steps,
             "learning_rate": model.learning_rate,
             "batch_size": model.batch_size,
-            "scaler_type": model.scaler_type,
+            "scaler_type": scaler_type,
             "total_params": sum(p.numel() for p in model.parameters()),
         },
         "seed": seed,
@@ -190,14 +190,13 @@ def save_results(results, output_file):
         sys.exit(1)
 
 if __name__ == "__main__":
-    hyperparameter_combinations = generate_hyperparameter_combinations()
     results = {}
     for data_name, group in DATA_GROUPS:
         train, test, horizon, n_lags, freq_str, freq_int = load_and_prepare_data(data_name, group)
         sfdf, sn_smape_score = train_seasonal_naive(train, test, freq_str, freq_int, horizon)
-        group_results = train_mlp_model(train, sfdf, hyperparameter_combinations, freq_str, n_lags, horizon, sn_smape_score)
+        hyperparameter_combinations = generate_hyperparameter_combinations()
+        group_results = train_mlp_models(train, sfdf, hyperparameter_combinations, freq_str, n_lags, horizon, sn_smape_score)
         results.update(group_results)
 
-    output_dir = "./scripts/experiments"
-    output_file = os.path.join(output_dir, "model_stats.json")
-    save_results(results, output_file)
+        output_file =  "./scripts/experiments/model_stats.json"
+        save_results(results, output_file)
