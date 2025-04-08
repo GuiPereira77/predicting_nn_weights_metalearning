@@ -94,13 +94,14 @@ def main():
     # Configuration
     output_dir = os.path.join("scripts", "experiments", "output")
     os.makedirs(output_dir, exist_ok=True)
-    log_file = f"{output_dir}/predictions_{'classification' if classification else 'regression'}.txt"
-    model_file = f"{output_dir}/model_{'classification' if classification else 'regression'}.pkl"
+    log_file = os.path.join(output_dir, f"predictions_{'classification' if classification else 'regression'}.txt")
+    model_file = os.path.join(output_dir, f"model_{'classification' if classification else 'regression'}.pkl")
 
     # Load and preprocess data
     csv_path = "scripts/experiments/model_stats.csv"
     df = load_and_preprocess_data(csv_path)
-    X = df.drop(columns=["id", "smape", "is_better", "dataset_name", "dataset_group", "dataset_group_id", "seed"])
+    columns_to_drop = ["id", "smape", "is_better", "dataset_name", "dataset_group", "dataset_group_id", "seed"]
+    X = df.drop(columns=columns_to_drop, errors='ignore')
     y = df["is_better"] if classification else df["smape"]
 
     # Define model

@@ -5,6 +5,7 @@ import logging
 import torch
 import random
 import pandas as pd
+from pandas import json_normalize
 from itertools import product
 from neuralforecast import NeuralForecast
 from neuralforecast.models import MLP
@@ -76,7 +77,7 @@ def generate_hyperparameter_combinations():
         "learning_rate": [1e-3, 5e-4, 1e-4],
         "batch_size": [16, 32, 64],
         "scaler_type": ['identity', 'standard', 'robust', 'minmax'],
-        "seed": [42, 123, 456, 789, 1011, 1213, 1415, 1617, 1819, 2021],
+        "seed": [42, 123, 456, 789, 1011]#, 1213, 1415, 1617, 1819, 2021],
     }
 
     return product(*hyperparameters.values())
@@ -179,34 +180,26 @@ def create_result_entry(data_name, group, model, scaler_type, seed, scores, wp_c
     }
 
 def save_results_to_json(results, output_file):
-    """ Save the results to a JSON file. """
+    """ Save the results to JSON. """
     try:
         # Save results to JSON
         with open(output_file + ".json", "w") as f:
             json.dump(results, f, indent=4)
         logger.info(f"Results saved to {output_file}.json")
     except Exception as e:
-        logger.error(f"Error saving results to {output_file}: {e}")
+        logger.error(f"Error saving results to JSON: {e}")
         sys.exit(1)
 
 def save_results_to_csv(results, output_file):
-    """ Save the results to a CSV file. """
+    """ Save the results to CSV. """
     try:
-        # Flatten nested dictionaries
-        def flatten_dict(d, parent_key='', sep='_'):
-            return {f"{parent_key}{sep}{k}" if parent_key else k: v
-                for k, v in (flatten_dict(v, f"{parent_key}{sep}{k}" if parent_key else k, sep).items()
-                     if isinstance(v, dict) else [(k, v)] for k, v in d.items())}
-
-        # Flatten the results dictionary
-        flattened_results = {k: flatten_dict(v) if isinstance(v, dict) else v for k, v in results.items()}
-
         # Convert to DataFrame and save as CSV
-        df = pd.DataFrame.from_dict(flattened_results, orient='index')
-        df.to_csv(output_file, index=False)
+        flat_results = [{'id': k, **v} for k, v in results.items()]
+        df = json_normalize(flat_results, sep='_')
+        df.to_csv(output_file + ".csv", index=False)
         logger.info(f"Results saved to {output_file}.csv")
     except Exception as e:
-        logger.error(f"Error saving results to {output_file}: {e}")
+        logger.error(f"Error saving results to CSV: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
@@ -218,6 +211,6 @@ if __name__ == "__main__":
         group_results = train_mlp_models(train, sfdf, hyperparameter_combinations, freq_str, n_lags, horizon, sn_smape_score)
         results.update(group_results)
 
-        output_file =  "./scripts/experiments/model_stats"
-        save_results_to_json(results, output_file+".json")
-        save_results_to_csv(results, output_file+".csv")
+        output_file = os.path.join(".", "scripts", "experiments", "model_stats")
+        save_results_to_json(results, output_file)
+        save_results_to_csv(results, output_file)

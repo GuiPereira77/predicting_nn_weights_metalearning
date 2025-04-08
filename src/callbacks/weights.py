@@ -6,7 +6,7 @@ import sys
 
 class WeightsPrinterCallback(pl.Callback):
     stats = {}
-    train_steps = [10, 25, 50, 100, 200, 300, 400, 500, 1000]
+    train_checkpoints = [10, 25, 50, 100, 200, 300, 400, 500, 1000]
 
     def on_train_start(self, trainer, pl_module):
         """Called at the beginning of training to get initial statistics."""
@@ -22,10 +22,10 @@ class WeightsPrinterCallback(pl.Callback):
             "model_variance": self._get_model_variance(pl_module),
         }
 
-    def on_batch_end(self, trainer, pl_module):
+    def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx):
         """Called at the end of each batch to evaluate and analyze weights."""
-        if trainer.global_step in self.train_steps:
-            self.stats["step_"+trainer.global_step] = {
+        if trainer.global_step in self.train_checkpoints:
+            self.stats["step_" + str(trainer.global_step)] = {
                 **self._evaluate_weights(pl_module),
                 "model_variance": self._get_model_variance(pl_module),
             }
