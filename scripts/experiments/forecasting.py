@@ -24,7 +24,7 @@ def configure_logging():
     """ Configure logging settings."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
     logger = logging.getLogger(__name__)
-    # logger.setLevel(logging.ERROR)
+    logger.setLevel(logging.ERROR)
     return logger
 
 logger = configure_logging()
@@ -175,8 +175,7 @@ def create_result_entry(data_name, group, model, scaler_type, seed, scores, wp_c
         },
         "seed": seed,
         "scores": scores,
-        # "weights": copy.deepcopy(wp_cb.stats),
-        "weights": wp_cb.stats.copy(),
+        "weights": wp_cb.get_stats(),
     }
 
 def save_results(results, output_file):

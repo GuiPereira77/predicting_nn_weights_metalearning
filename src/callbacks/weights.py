@@ -1,29 +1,44 @@
 import pytorch_lightning as pl
 import numpy as np
-import matplotlib.pyplot as plt
 import powerlaw
 import torch
+import sys
 
 class WeightsPrinterCallback(pl.Callback):
     stats = {}
+    train_steps = [10, 25, 50, 100, 200, 300, 400, 500, 1000]
 
     def on_train_start(self, trainer, pl_module):
         """Called at the beginning of training to get initial statistics."""
-        self._get_model_variance(pl_module, 'start')
+        self.stats["start"] = {
+            **self._evaluate_weights(pl_module),
+            "model_variance": self._get_model_variance(pl_module),
+        }
 
     def on_train_end(self, trainer, pl_module):
         """Called at the end of training to evaluate and analyze weights."""
-        self._get_model_variance(pl_module, 'end')
-        self._evaluate_weights(pl_module)
+        self.stats["end"] = {
+            **self._evaluate_weights(pl_module),
+            "model_variance": self._get_model_variance(pl_module),
+        }
+
+    def on_batch_end(self, trainer, pl_module):
+        """Called at the end of each batch to evaluate and analyze weights."""
+        if trainer.global_step in self.train_steps:
+            self.stats["step_"+trainer.global_step] = {
+                **self._evaluate_weights(pl_module),
+                "model_variance": self._get_model_variance(pl_module),
+            }
 
     def _evaluate_weights(self, pl_module):
         """Extracts and computes statistical metrics for weight matrices."""
         state_dict = pl_module.state_dict()
+        weights_dict = {}
         for name, tensor in state_dict.items():
             if 'weight' in name and tensor.ndimension() > 1:
                 tensor_np = tensor.detach().cpu().numpy()
                 wm_analysis = self.analyze_weight_matrix(tensor_np)
-                self.stats[name] = {
+                weights_dict[name] = {
                     'shape': tensor_np.shape,
                     'input_size': tensor_np.shape[1],
                     'output_size': tensor_np.shape[0],
@@ -35,6 +50,7 @@ class WeightsPrinterCallback(pl.Callback):
                     'var': np.var(tensor_np).item(),
                     **wm_analysis
                 }
+        return weights_dict
 
     def analyze_weight_matrix(self, W):
         """ Analyze the weight matrix of the model. """
@@ -70,8 +86,12 @@ class WeightsPrinterCallback(pl.Callback):
             "alpha_hat": float(alpha_hat)
         }
 
-    def _get_model_variance(self, model, stage):
+    def _get_model_variance(self, model):
         """Compute the variance of the model weights."""
         all_weights = torch.cat([param.data.flatten() for param in model.parameters() if len(param.shape) > 1])
         model_variance = torch.var(all_weights)
-        self.stats['model_variance_'+stage] = model_variance.item()
+        return model_variance.item()
+    
+    def get_stats(self):
+        """Return the collected statistics."""
+        return self.stats
