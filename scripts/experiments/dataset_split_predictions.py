@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
-import sys
 import time
+import sys
+import os
 from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import (
@@ -88,13 +89,16 @@ def save_results(log_file, df, mean_std_df, all_reports, feature_importance_df, 
         sys.stdout = sys.__stdout__
 
 def main():
-    # Configuration
-    csv_path = "scripts/experiments/model_stats.csv"
     classification = True
-    log_file = f"scripts/experiments/predictions_{'classification' if classification else 'regression'}.txt"
-    model_file = f"scripts/experiments/model_{'classification' if classification else 'regression'}.pkl"
+    
+    # Configuration
+    output_dir = os.path.join("scripts", "experiments", "output")
+    os.makedirs(output_dir, exist_ok=True)
+    log_file = f"{output_dir}/predictions_{'classification' if classification else 'regression'}.txt"
+    model_file = f"{output_dir}/model_{'classification' if classification else 'regression'}.pkl"
 
     # Load and preprocess data
+    csv_path = "scripts/experiments/model_stats.csv"
     df = load_and_preprocess_data(csv_path)
     X = df.drop(columns=["id", "smape", "is_better", "dataset_name", "dataset_group", "dataset_group_id", "seed"])
     y = df["is_better"] if classification else df["smape"]
