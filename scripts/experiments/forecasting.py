@@ -190,6 +190,7 @@ def save_results_to_json(results, output_file):
         sys.exit(1)
 
 def save_results_to_csv(model_stats, output_file):
+    """ Save the results to a CSV file. """
     try:
         # Flatten nested dictionaries
         def flatten_dict(d, parent_key='', sep='_'):
