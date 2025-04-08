@@ -189,7 +189,7 @@ def save_results_to_json(results, output_file):
         logger.error(f"Error saving results to {output_file}: {e}")
         sys.exit(1)
 
-def save_results_to_csv(model_stats, output_file):
+def save_results_to_csv(results, output_file):
     """ Save the results to a CSV file. """
     try:
         # Flatten nested dictionaries
@@ -198,11 +198,11 @@ def save_results_to_csv(model_stats, output_file):
                 for k, v in (flatten_dict(v, f"{parent_key}{sep}{k}" if parent_key else k, sep).items()
                      if isinstance(v, dict) else [(k, v)] for k, v in d.items())}
 
-        # Flatten the model_stats dictionary
-        flattened_stats = {k: flatten_dict(v) if isinstance(v, dict) else v for k, v in model_stats.items()}
+        # Flatten the results dictionary
+        flattened_results = {k: flatten_dict(v) if isinstance(v, dict) else v for k, v in results.items()}
 
         # Convert to DataFrame and save as CSV
-        df = pd.DataFrame.from_dict(flattened_stats, orient='index')
+        df = pd.DataFrame.from_dict(flattened_results, orient='index')
         df.to_csv(output_file, index=False)
         logger.info(f"Results saved to {output_file}.csv")
     except Exception as e:
