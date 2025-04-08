@@ -26,13 +26,13 @@ def define_model(classification):
         return XGBRFClassifier(n_estimators=200, random_state=42)
     return XGBRFRegressor(n_estimators=200, random_state=42)
 
-def evaluate_model(y_test, y_pred, classification):
+def evaluate_model(y_test, y_pred, y_pred_proba, classification):
     """Evaluate the model and return scores."""
     if classification:
         score_dict = {
             "acc_score": accuracy_score(y_test, y_pred),
-            "roc_auc_score": roc_auc_score(y_test, y_pred),
-            "log_loss_score": log_loss(y_test, y_pred),
+            "roc_auc_score": roc_auc_score(y_test, y_pred_proba),
+            "log_loss_score": log_loss(y_test, y_pred_proba),
             "f1_score": f1_score(y_test, y_pred)
         }
         return score_dict, classification_report(y_test, y_pred, zero_division=1)
@@ -59,7 +59,9 @@ def cross_validate_model(df, X, y, model, classification):
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
-        score_dict, report = evaluate_model(y_test, y_pred, classification)
+        y_pred_proba = model.predict_proba(X_test)[:, 1] if classification else None
+
+        score_dict, report = evaluate_model(y_test, y_pred, y_pred_proba, classification)
         all_reports.append(f"Testing {test_group_id}:")
         for score_name, score in score_dict.items():
             scores[score_name] = scores.get(score_name, []) + [score]
@@ -88,7 +90,7 @@ def save_results(log_file, df, mean_std_df, all_reports, feature_importance_df, 
 def main():
     # Configuration
     csv_path = "scripts/experiments/model_stats.csv"
-    classification = False
+    classification = True
     log_file = f"scripts/experiments/predictions_{'classification' if classification else 'regression'}.txt"
     model_file = f"scripts/experiments/model_{'classification' if classification else 'regression'}.pkl"
 
