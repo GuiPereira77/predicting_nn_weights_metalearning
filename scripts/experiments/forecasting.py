@@ -194,14 +194,9 @@ def save_results_to_csv(model_stats, output_file):
     try:
         # Flatten nested dictionaries
         def flatten_dict(d, parent_key='', sep='_'):
-            items = []
-            for k, v in d.items():
-                new_key = f"{parent_key}{sep}{k}" if parent_key else k
-                if isinstance(v, dict):
-                    items.extend(flatten_dict(v, new_key, sep=sep).items())
-                else:
-                    items.append((new_key, v))
-            return dict(items)
+            return {f"{parent_key}{sep}{k}" if parent_key else k: v
+                for k, v in (flatten_dict(v, f"{parent_key}{sep}{k}" if parent_key else k, sep).items()
+                     if isinstance(v, dict) else [(k, v)] for k, v in d.items())}
 
         # Flatten the model_stats dictionary
         flattened_stats = {k: flatten_dict(v) if isinstance(v, dict) else v for k, v in model_stats.items()}
