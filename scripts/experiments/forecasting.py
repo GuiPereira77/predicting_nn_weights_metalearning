@@ -3,8 +3,8 @@ import sys
 import json
 import logging
 import torch
-import copy
 import random
+import pandas as pd
 from itertools import product
 from neuralforecast import NeuralForecast
 from neuralforecast.models import MLP
@@ -178,12 +178,37 @@ def create_result_entry(data_name, group, model, scaler_type, seed, scores, wp_c
         "weights": wp_cb.get_stats(),
     }
 
-def save_results(results, output_file):
+def save_results_to_json(results, output_file):
     """ Save the results to a JSON file. """
     try:
-        with open(output_file, "w") as f:
+        # Save results to JSON
+        with open(output_file + ".json", "w") as f:
             json.dump(results, f, indent=4)
-        logger.info(f"Results saved to {output_file}")
+        logger.info(f"Results saved to {output_file}.json")
+    except Exception as e:
+        logger.error(f"Error saving results to {output_file}: {e}")
+        sys.exit(1)
+
+def save_results_to_csv(model_stats, output_file):
+    try:
+        # Flatten nested dictionaries
+        def flatten_dict(d, parent_key='', sep='_'):
+            items = []
+            for k, v in d.items():
+                new_key = f"{parent_key}{sep}{k}" if parent_key else k
+                if isinstance(v, dict):
+                    items.extend(flatten_dict(v, new_key, sep=sep).items())
+                else:
+                    items.append((new_key, v))
+            return dict(items)
+
+        # Flatten the model_stats dictionary
+        flattened_stats = {k: flatten_dict(v) if isinstance(v, dict) else v for k, v in model_stats.items()}
+
+        # Convert to DataFrame and save as CSV
+        df = pd.DataFrame.from_dict(flattened_stats, orient='index')
+        df.to_csv(output_file, index=False)
+        logger.info(f"Results saved to {output_file}.csv")
     except Exception as e:
         logger.error(f"Error saving results to {output_file}: {e}")
         sys.exit(1)
@@ -197,5 +222,6 @@ if __name__ == "__main__":
         group_results = train_mlp_models(train, sfdf, hyperparameter_combinations, freq_str, n_lags, horizon, sn_smape_score)
         results.update(group_results)
 
-        output_file =  "./scripts/experiments/model_stats.json"
-        save_results(results, output_file)
+        output_file =  "./scripts/experiments/model_stats"
+        save_results_to_json(results, output_file+".json")
+        save_results_to_csv(results, output_file+".csv")
