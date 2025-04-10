@@ -176,7 +176,7 @@ def create_result_entry(data_name, group, model, scaler_type, seed, scores, wp_c
         },
         "seed": seed,
         "scores": scores,
-        "weights": wp_cb.get_stats(),
+        "weights": wp_cb.get_stats().copy(),
     }
 
 def save_results_to_json(results, output_file):
@@ -212,5 +212,5 @@ if __name__ == "__main__":
         results.update(group_results)
 
         output_file = os.path.join(".", "scripts", "experiments", "model_stats")
-        save_results_to_json(results, output_file)
+        # save_results_to_json(results, output_file)
         save_results_to_csv(results, output_file)
