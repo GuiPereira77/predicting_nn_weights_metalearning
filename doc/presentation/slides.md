@@ -14,7 +14,6 @@ footer: Guilherme Dias da Rocha Pereira, up202007375@edu.fe.up.pt, 2025
   img {
     display: block;
     margin: auto;
-    /* border: 2px solid black; */
   }
   h2 {
 	  display: flex;
@@ -79,9 +78,9 @@ hyperparameters = {
 ### **Training Callback**
 
 - Evaluate weight matrices and get model variance:
-  - At the start of training, `on_train_start`
-  - At the end of training, `on_train_end`
-  - During training, `on_train_batch_end`
+  - At the **start of training**: `on_train_start`
+  - At the **end of training**: `on_train_end`
+  - **During training**: `on_train_batch_end`
     - Custom training checkpoits:` [10, 25, 50, 100, 200, 300, 400, 500]`
 
 ---
@@ -99,14 +98,6 @@ hyperparameters = {
 ---
 
 ## Train Metamodel
-<style>
-  h2 {
-	  display: flex;
-	  height: 100%;
-	  justify-content: center;
-	  align-items: center;
-  }
-</style>
 
 ---
 
