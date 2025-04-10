@@ -172,3 +172,4 @@ cython_debug/
 
 .idea/
 lightning_logs
+scripts/experiments/model_stats.json
