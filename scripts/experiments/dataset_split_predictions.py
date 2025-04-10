@@ -6,7 +6,7 @@ import os
 from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import (
-    accuracy_score, classification_report, mean_absolute_error, 
+    accuracy_score, classification_report, mean_absolute_error,
     roc_auc_score, log_loss, f1_score, mean_squared_error, r2_score
 )
 from xgboost import XGBRFClassifier, XGBRFRegressor
@@ -17,7 +17,8 @@ def load_and_preprocess_data(csv_path):
     df = pd.read_csv(csv_path)
     df["dataset_group_id"] = df["dataset_name"].astype(str) + "_" + df["dataset_group"].astype(str)
     encoder = LabelEncoder()
-    df["scaler_type"] = encoder.fit_transform(df["scaler_type"])
+    df["model_scaler_type"] = encoder.fit_transform(df["model_scaler_type"])
+    df = df.astype({col: 'float64' for col in df.select_dtypes(include=['int64']).columns})
     df.fillna(0, inplace=True)
     return df
 
@@ -73,6 +74,34 @@ def cross_validate_model(df, X, y, model, classification):
 
     return scores, all_reports, feature_importances
 
+def print_stage_importance(feature_importance_df):
+    """Calculate mean, std, and sum of feature importance for each training stage."""
+    stages = [
+        "weights_start_mlp", "weights_end_mlp", "weights_step_10_mlp",
+        "weights_step_25_mlp", "weights_step_50_mlp", "weights_step_100_mlp",
+        "weights_step_200_mlp", "weights_step_300_mlp", "weights_step_400_mlp",
+        "weights_step_500_mlp"
+    ]
+    stage_importance_stats = {
+        stage: {
+            "mean": feature_importance_df.loc[
+                feature_importance_df['Feature'].str.contains(stage), 'Importance'
+            ].mean(),
+            "std": feature_importance_df.loc[
+                feature_importance_df['Feature'].str.contains(stage), 'Importance'
+            ].std(),
+            "sum": feature_importance_df.loc[
+                feature_importance_df['Feature'].str.contains(stage), 'Importance'
+            ].sum()
+        }
+        for stage in stages
+        if feature_importance_df['Feature'].str.contains(stage).any()
+    }
+
+    # Sort and display stage importance
+    for stage, stats in sorted(stage_importance_stats.items(), key=lambda item: item[1]['mean'], reverse=True):
+        print(f"{stage}: \t{stats['mean']:.6f} +/- {stats['std']:.6f}")
+
 def save_results(log_file, df, mean_std_df, all_reports, feature_importance_df, execution_time):
     """Save results to a log file."""
     with open(log_file, "w") as log:
@@ -89,8 +118,8 @@ def save_results(log_file, df, mean_std_df, all_reports, feature_importance_df, 
         sys.stdout = sys.__stdout__
 
 def main():
-    classification = True
-    
+    classification = False
+
     # Configuration
     output_dir = os.path.join("scripts", "experiments", "output")
     os.makedirs(output_dir, exist_ok=True)
@@ -100,9 +129,15 @@ def main():
     # Load and preprocess data
     csv_path = "scripts/experiments/model_stats.csv"
     df = load_and_preprocess_data(csv_path)
-    columns_to_drop = ["id", "smape", "is_better", "dataset_name", "dataset_group", "dataset_group_id", "seed"]
+    shape_columns = df.columns[df.columns.str.contains('shape')]
+    columns_to_drop = [
+        "id", "model_name", "seed", "dataset_name", "dataset_group",
+        "dataset_group_id", "scores_smape", "scores_mse", "scores_mae",
+        "scores_r2_score", "scores_sn_smape", "scores_is_better",
+        *shape_columns.tolist()
+    ]
     X = df.drop(columns=columns_to_drop, errors='ignore')
-    y = df["is_better"] if classification else df["smape"]
+    y = df["scores_is_better"] if classification else df["scores_smape"]  # Updated target column names
 
     # Define model
     model = define_model(classification)
@@ -128,8 +163,11 @@ def main():
     feature_importance_df = pd.DataFrame({"Feature": X.columns, "Importance": avg_feature_importance})
     feature_importance_df = feature_importance_df.sort_values(by="Importance", ascending=False)
 
+    # Print feature importance mean for each stage
+    # print_stage_importance(feature_importance_df)
+
     # Save results
-    save_results(log_file, df, mean_std_df, all_reports, feature_importance_df, execution_time)
+    save_results(log_file, X, mean_std_df, all_reports, feature_importance_df, execution_time)
 
     # Export the model
     joblib.dump(model, model_file)
