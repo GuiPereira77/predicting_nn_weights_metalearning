@@ -9,8 +9,10 @@ from sklearn.metrics import (
     accuracy_score, classification_report, mean_absolute_error,
     roc_auc_score, log_loss, f1_score, mean_squared_error, r2_score
 )
+from scipy.stats import pearsonr, kendalltau, spearmanr
 from xgboost import XGBRFClassifier, XGBRFRegressor
 import joblib
+
 
 def load_and_preprocess_data(csv_path):
     """Load and preprocess the dataset."""
@@ -29,7 +31,7 @@ def define_model(classification):
     return XGBRFRegressor(n_estimators=200, random_state=42)
 
 def evaluate_model(y_test, y_pred, y_pred_proba, classification):
-    """Evaluate the model and return scores."""
+    """Evaluates a model's performance based on test data and predictions."""
     if classification:
         score_dict = {
             "acc_score": accuracy_score(y_test, y_pred),
@@ -42,7 +44,10 @@ def evaluate_model(y_test, y_pred, y_pred_proba, classification):
         score_dict = {
             "mae_score": mean_absolute_error(y_test, y_pred),
             "mse_score": mean_squared_error(y_test, y_pred),
-            "r2_score": r2_score(y_test, y_pred)
+            "r2_score": r2_score(y_test, y_pred),
+            "pearson": pearsonr(y_test, y_pred)[0],
+            "kendall": kendalltau(y_test, y_pred)[0],
+            "spearman": spearmanr(y_test, y_pred)[0]
         }
         return score_dict, None
 
@@ -74,34 +79,6 @@ def cross_validate_model(df, X, y, model, classification):
 
     return scores, all_reports, feature_importances
 
-def print_stage_importance(feature_importance_df):
-    """Calculate mean, std, and sum of feature importance for each training stage."""
-    stages = [
-        "weights_start_mlp", "weights_end_mlp", "weights_step_10_mlp",
-        "weights_step_25_mlp", "weights_step_50_mlp", "weights_step_100_mlp",
-        "weights_step_200_mlp", "weights_step_300_mlp", "weights_step_400_mlp",
-        "weights_step_500_mlp"
-    ]
-    stage_importance_stats = {
-        stage: {
-            "mean": feature_importance_df.loc[
-                feature_importance_df['Feature'].str.contains(stage), 'Importance'
-            ].mean(),
-            "std": feature_importance_df.loc[
-                feature_importance_df['Feature'].str.contains(stage), 'Importance'
-            ].std(),
-            "sum": feature_importance_df.loc[
-                feature_importance_df['Feature'].str.contains(stage), 'Importance'
-            ].sum()
-        }
-        for stage in stages
-        if feature_importance_df['Feature'].str.contains(stage).any()
-    }
-
-    # Sort and display stage importance
-    for stage, stats in sorted(stage_importance_stats.items(), key=lambda item: item[1]['mean'], reverse=True):
-        print(f"{stage}: \t{stats['mean']:.6f} +/- {stats['std']:.6f}")
-
 def save_results(log_file, df, mean_std_df, all_reports, feature_importance_df, execution_time):
     """Save results to a log file."""
     with open(log_file, "w") as log:
@@ -118,7 +95,7 @@ def save_results(log_file, df, mean_std_df, all_reports, feature_importance_df, 
         sys.stdout = sys.__stdout__
 
 def main():
-    classification = False
+    classification = True
 
     # Configuration
     output_dir = os.path.join("scripts", "experiments", "output")
@@ -127,7 +104,7 @@ def main():
     model_file = os.path.join(output_dir, f"model_{'classification' if classification else 'regression'}.pkl")
 
     # Load and preprocess data
-    csv_path = "scripts/experiments/model_stats.csv"
+    csv_path = "scripts/experiments/new_model_stats.csv"
     df = load_and_preprocess_data(csv_path)
     shape_columns = df.columns[df.columns.str.contains('shape')]
     columns_to_drop = [
@@ -138,6 +115,13 @@ def main():
     ]
     X = df.drop(columns=columns_to_drop, errors='ignore')
     y = df["scores_is_better"] if classification else df["scores_smape"]  # Updated target column names
+
+    # stages = [
+    #     "weights_start_mlp", "weights_step_10_mlp", "weights_step_25_mlp",
+    #     "weights_step_50_mlp", "weights_step_100_mlp", "weights_step_200_mlp",
+    #     "weights_step_300_mlp", "weights_step_400_mlp", "weights_step_500_mlp",
+    #     "weights_end_mlp"
+    # ]
 
     # Define model
     model = define_model(classification)
@@ -162,9 +146,7 @@ def main():
     avg_feature_importance = np.mean(feature_importances, axis=0)
     feature_importance_df = pd.DataFrame({"Feature": X.columns, "Importance": avg_feature_importance})
     feature_importance_df = feature_importance_df.sort_values(by="Importance", ascending=False)
-
-    # Print feature importance mean for each stage
-    # print_stage_importance(feature_importance_df)
+    feature_importance_df = feature_importance_df.head(10) # Filter top 10 
 
     # Save results
     save_results(log_file, X, mean_std_df, all_reports, feature_importance_df, execution_time)
