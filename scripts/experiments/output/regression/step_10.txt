@@ -1,0 +1,81 @@
+Dataframe Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 4320 entries, 0 to 4319
+Columns: 147 entries, weights_start_mlp.0.weight_input_size to weights_step_100_model_variance
+dtypes: float64(147)
+memory usage: 4.8 MB
+None
+
+Mean and Std Scores:
+   Metric Mean Score Std Score
+mae_score     0.0848    0.0191
+mse_score     0.0197    0.0087
+ r2_score    -2.7343    2.6151
+  pearson     0.2891    0.2891
+  kendall     0.5412    0.1426
+ spearman     0.7061    0.1686
+
+Cross-Validation Results:
+Testing ['Tourism_Quarterly']:
+- mae_score: 0.0701
+- mse_score: 0.0148
+- r2_score: -0.1047
+- pearson: 0.7767
+- kendall: 0.6284
+- spearman: 0.8278
+None
+Testing ['Tourism_Monthly']:
+- mae_score: 0.0845
+- mse_score: 0.0242
+- r2_score: -7.8700
+- pearson: 0.0576
+- kendall: 0.5502
+- spearman: 0.7243
+None
+Testing ['M3_Quarterly']:
+- mae_score: 0.0929
+- mse_score: 0.0200
+- r2_score: -2.6832
+- pearson: 0.2012
+- kendall: 0.6730
+- spearman: 0.8567
+None
+Testing ['M3_Monthly']:
+- mae_score: 0.0664
+- mse_score: 0.0064
+- r2_score: -3.8261
+- pearson: 0.5828
+- kendall: 0.6434
+- spearman: 0.8037
+None
+Testing ['Gluonts_m1_quarterly']:
+- mae_score: 0.1224
+- mse_score: 0.0347
+- r2_score: -1.3210
+- pearson: 0.1266
+- kendall: 0.5031
+- spearman: 0.6666
+None
+Testing ['Gluonts_m1_monthly']:
+- mae_score: 0.0727
+- mse_score: 0.0179
+- r2_score: -0.6008
+- pearson: -0.0106
+- kendall: 0.2494
+- spearman: 0.3574
+None
+
+Average Feature Importance:
+                                      Feature  Importance
+weights_step_100_mlp.0.weight_frobenius_norm    0.077205
+              weights_step_10_out.weight_std    0.060222
+         weights_step_100_mlp.1.weight_alpha    0.043548
+              weights_step_10_out.weight_var    0.036906
+         weights_step_100_mlp.2.weight_alpha    0.036189
+         weights_step_10_mlp.2.weight_median    0.031356
+             weights_step_100_out.weight_max    0.028086
+           weights_step_10_mlp.1.weight_mean    0.021819
+           weights_step_100_mlp.1.weight_min    0.021631
+ weights_step_10_mlp.0.weight_frobenius_norm    0.020592
+
+Execution Time: 6.037 seconds

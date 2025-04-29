@@ -1,0 +1,132 @@
+Dataframe Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 4320 entries, 0 to 4319
+Data columns (total 49 columns):
+ #   Column                                     Non-Null Count  Dtype  
+---  ------                                     --------------  -----  
+ 0   weights_start_mlp.0.weight_input_size      4320 non-null   float64
+ 1   weights_start_mlp.0.weight_output_size     4320 non-null   float64
+ 2   weights_start_mlp.0.weight_mean            4320 non-null   float64
+ 3   weights_start_mlp.0.weight_median          4320 non-null   float64
+ 4   weights_start_mlp.0.weight_std             4320 non-null   float64
+ 5   weights_start_mlp.0.weight_max             4320 non-null   float64
+ 6   weights_start_mlp.0.weight_min             4320 non-null   float64
+ 7   weights_start_mlp.0.weight_var             4320 non-null   float64
+ 8   weights_start_mlp.0.weight_frobenius_norm  4320 non-null   float64
+ 9   weights_start_mlp.0.weight_spectral_norm   4320 non-null   float64
+ 10  weights_start_mlp.0.weight_alpha           4320 non-null   float64
+ 11  weights_start_mlp.0.weight_alpha_hat       4320 non-null   float64
+ 12  weights_start_mlp.1.weight_input_size      4320 non-null   float64
+ 13  weights_start_mlp.1.weight_output_size     4320 non-null   float64
+ 14  weights_start_mlp.1.weight_mean            4320 non-null   float64
+ 15  weights_start_mlp.1.weight_median          4320 non-null   float64
+ 16  weights_start_mlp.1.weight_std             4320 non-null   float64
+ 17  weights_start_mlp.1.weight_max             4320 non-null   float64
+ 18  weights_start_mlp.1.weight_min             4320 non-null   float64
+ 19  weights_start_mlp.1.weight_var             4320 non-null   float64
+ 20  weights_start_mlp.1.weight_frobenius_norm  4320 non-null   float64
+ 21  weights_start_mlp.1.weight_spectral_norm   4320 non-null   float64
+ 22  weights_start_mlp.1.weight_alpha           4320 non-null   float64
+ 23  weights_start_mlp.1.weight_alpha_hat       4320 non-null   float64
+ 24  weights_start_mlp.2.weight_input_size      4320 non-null   float64
+ 25  weights_start_mlp.2.weight_output_size     4320 non-null   float64
+ 26  weights_start_mlp.2.weight_mean            4320 non-null   float64
+ 27  weights_start_mlp.2.weight_median          4320 non-null   float64
+ 28  weights_start_mlp.2.weight_std             4320 non-null   float64
+ 29  weights_start_mlp.2.weight_max             4320 non-null   float64
+ 30  weights_start_mlp.2.weight_min             4320 non-null   float64
+ 31  weights_start_mlp.2.weight_var             4320 non-null   float64
+ 32  weights_start_mlp.2.weight_frobenius_norm  4320 non-null   float64
+ 33  weights_start_mlp.2.weight_spectral_norm   4320 non-null   float64
+ 34  weights_start_mlp.2.weight_alpha           4320 non-null   float64
+ 35  weights_start_mlp.2.weight_alpha_hat       4320 non-null   float64
+ 36  weights_start_out.weight_input_size        4320 non-null   float64
+ 37  weights_start_out.weight_output_size       4320 non-null   float64
+ 38  weights_start_out.weight_mean              4320 non-null   float64
+ 39  weights_start_out.weight_median            4320 non-null   float64
+ 40  weights_start_out.weight_std               4320 non-null   float64
+ 41  weights_start_out.weight_max               4320 non-null   float64
+ 42  weights_start_out.weight_min               4320 non-null   float64
+ 43  weights_start_out.weight_var               4320 non-null   float64
+ 44  weights_start_out.weight_frobenius_norm    4320 non-null   float64
+ 45  weights_start_out.weight_spectral_norm     4320 non-null   float64
+ 46  weights_start_out.weight_alpha             4320 non-null   float64
+ 47  weights_start_out.weight_alpha_hat         4320 non-null   float64
+ 48  weights_start_model_variance               4320 non-null   float64
+dtypes: float64(49)
+memory usage: 1.6 MB
+None
+
+Mean and Std Scores:
+   Metric Mean Score Std Score
+mae_score     0.0648    0.0128
+mse_score     0.0106    0.0044
+ r2_score    -0.8057    0.9197
+  pearson     0.3130    0.0870
+  kendall     0.4387    0.0555
+ spearman     0.5619    0.0678
+
+Cross-Validation Results:
+Testing ['Tourism_Quarterly']:
+- mae_score: 0.0707
+- mse_score: 0.0173
+- r2_score: -0.2893
+- pearson: 0.3353
+- kendall: 0.4754
+- spearman: 0.6144
+None
+Testing ['Tourism_Monthly']:
+- mae_score: 0.0583
+- mse_score: 0.0057
+- r2_score: -1.0706
+- pearson: 0.4871
+- kendall: 0.4810
+- spearman: 0.6113
+None
+Testing ['M3_Quarterly']:
+- mae_score: 0.0876
+- mse_score: 0.0105
+- r2_score: -0.9357
+- pearson: 0.2561
+- kendall: 0.4073
+- spearman: 0.5297
+None
+Testing ['M3_Monthly']:
+- mae_score: 0.0639
+- mse_score: 0.0048
+- r2_score: -2.6193
+- pearson: 0.3231
+- kendall: 0.4902
+- spearman: 0.6086
+None
+Testing ['Gluonts_m1_quarterly']:
+- mae_score: 0.0632
+- mse_score: 0.0146
+- r2_score: 0.0263
+- pearson: 0.2351
+- kendall: 0.4475
+- spearman: 0.5825
+None
+Testing ['Gluonts_m1_monthly']:
+- mae_score: 0.0452
+- mse_score: 0.0106
+- r2_score: 0.0545
+- pearson: 0.2410
+- kendall: 0.3308
+- spearman: 0.4250
+None
+
+Average Feature Importance:
+                                   Feature  Importance
+weights_start_mlp.1.weight_frobenius_norm    0.097620
+           weights_start_mlp.1.weight_min    0.076654
+           weights_start_mlp.2.weight_min    0.068251
+             weights_start_out.weight_min    0.055641
+       weights_start_out.weight_alpha_hat    0.049078
+           weights_start_mlp.1.weight_max    0.040739
+    weights_start_mlp.1.weight_input_size    0.040365
+ weights_start_mlp.0.weight_spectral_norm    0.037323
+           weights_start_mlp.1.weight_var    0.034627
+           weights_start_out.weight_alpha    0.033562
+
+Execution Time: 2.323 seconds

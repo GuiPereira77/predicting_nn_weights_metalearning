@@ -1,0 +1,81 @@
+Dataframe Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 4320 entries, 0 to 4319
+Columns: 196 entries, weights_start_mlp.0.weight_input_size to weights_step_100_model_variance
+dtypes: float64(196)
+memory usage: 6.5 MB
+None
+
+Mean and Std Scores:
+   Metric Mean Score Std Score
+mae_score     0.0830    0.0145
+mse_score     0.0195    0.0074
+ r2_score    -2.5405    2.2118
+  pearson     0.2387    0.2032
+  kendall     0.5554    0.1428
+ spearman     0.7277    0.1663
+
+Cross-Validation Results:
+Testing ['Tourism_Quarterly']:
+- mae_score: 0.0729
+- mse_score: 0.0177
+- r2_score: -0.3227
+- pearson: 0.4443
+- kendall: 0.5871
+- spearman: 0.7937
+None
+Testing ['Tourism_Monthly']:
+- mae_score: 0.0836
+- mse_score: 0.0214
+- r2_score: -6.8496
+- pearson: 0.0487
+- kendall: 0.5496
+- spearman: 0.7223
+None
+Testing ['M3_Quarterly']:
+- mae_score: 0.0940
+- mse_score: 0.0206
+- r2_score: -2.7996
+- pearson: 0.2332
+- kendall: 0.6677
+- spearman: 0.8452
+None
+Testing ['M3_Monthly']:
+- mae_score: 0.0646
+- mse_score: 0.0058
+- r2_score: -3.3740
+- pearson: 0.5572
+- kendall: 0.7055
+- spearman: 0.8887
+None
+Testing ['Gluonts_m1_quarterly']:
+- mae_score: 0.1082
+- mse_score: 0.0311
+- r2_score: -1.0773
+- pearson: 0.1582
+- kendall: 0.5605
+- spearman: 0.7374
+None
+Testing ['Gluonts_m1_monthly']:
+- mae_score: 0.0747
+- mse_score: 0.0203
+- r2_score: -0.8195
+- pearson: -0.0093
+- kendall: 0.2619
+- spearman: 0.3788
+None
+
+Average Feature Importance:
+                                      Feature  Importance
+ weights_step_25_mlp.0.weight_frobenius_norm    0.057454
+weights_step_100_mlp.0.weight_frobenius_norm    0.057028
+          weights_step_25_mlp.2.weight_alpha    0.038890
+              weights_step_10_out.weight_std    0.035933
+         weights_step_100_mlp.1.weight_alpha    0.033932
+              weights_step_10_out.weight_var    0.029241
+         weights_step_10_mlp.2.weight_median    0.026521
+         weights_step_100_mlp.2.weight_alpha    0.024707
+         weights_step_25_mlp.2.weight_median    0.018607
+           weights_step_100_mlp.1.weight_min    0.018018
+
+Execution Time: 8.669 seconds

@@ -1,0 +1,115 @@
+Dataframe Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 4320 entries, 0 to 4319
+Columns: 196 entries, weights_start_mlp.0.weight_input_size to weights_step_100_model_variance
+dtypes: float64(196)
+memory usage: 6.5 MB
+None
+
+Mean and Std Scores:
+        Metric Mean Score Std Score
+     acc_score     0.4537    0.1370
+ roc_auc_score     0.7335    0.1235
+log_loss_score     1.0708    0.2985
+      f1_score     0.3746    0.1294
+
+Cross-Validation Results:
+Testing ['Tourism_Quarterly']:
+- acc_score: 0.7014
+- roc_auc_score: 0.9247
+- log_loss_score: 0.6695
+- f1_score: 0.5474
+              precision    recall  f1-score   support
+
+       False       1.00      0.64      0.78       590
+        True       0.38      1.00      0.55       130
+
+    accuracy                           0.70       720
+   macro avg       0.69      0.82      0.66       720
+weighted avg       0.89      0.70      0.74       720
+
+Testing ['Tourism_Monthly']:
+- acc_score: 0.3542
+- roc_auc_score: 0.7492
+- log_loss_score: 1.3644
+- f1_score: 0.2185
+              precision    recall  f1-score   support
+
+       False       0.97      0.29      0.45       650
+        True       0.12      0.93      0.22        70
+
+    accuracy                           0.35       720
+   macro avg       0.55      0.61      0.33       720
+weighted avg       0.89      0.35      0.43       720
+
+Testing ['M3_Quarterly']:
+- acc_score: 0.5417
+- roc_auc_score: 0.8526
+- log_loss_score: 0.8625
+- f1_score: 0.3654
+              precision    recall  f1-score   support
+
+       False       0.47      1.00      0.64       295
+        True       1.00      0.22      0.37       425
+
+    accuracy                           0.54       720
+   macro avg       0.74      0.61      0.50       720
+weighted avg       0.78      0.54      0.48       720
+
+Testing ['M3_Monthly']:
+- acc_score: 0.2778
+- roc_auc_score: 0.6345
+- log_loss_score: 1.5408
+- f1_score: 0.2239
+              precision    recall  f1-score   support
+
+       False       0.19      1.00      0.32       125
+        True       1.00      0.13      0.22       595
+
+    accuracy                           0.28       720
+   macro avg       0.60      0.56      0.27       720
+weighted avg       0.86      0.28      0.24       720
+
+Testing ['Gluonts_m1_quarterly']:
+- acc_score: 0.4028
+- roc_auc_score: 0.6701
+- log_loss_score: 1.0691
+- f1_score: 0.5275
+              precision    recall  f1-score   support
+
+       False       0.10      1.00      0.19        50
+        True       1.00      0.36      0.53       670
+
+    accuracy                           0.40       720
+   macro avg       0.55      0.68      0.36       720
+weighted avg       0.94      0.40      0.50       720
+
+Testing ['Gluonts_m1_monthly']:
+- acc_score: 0.4444
+- roc_auc_score: 0.5700
+- log_loss_score: 0.9188
+- f1_score: 0.3651
+              precision    recall  f1-score   support
+
+       False       0.34      0.95      0.51       215
+        True       0.92      0.23      0.37       505
+
+    accuracy                           0.44       720
+   macro avg       0.63      0.59      0.44       720
+weighted avg       0.75      0.44      0.41       720
+
+
+Average Feature Importance:
+                                     Feature  Importance
+           weights_step_25_out.weight_alpha    0.028487
+           weights_step_10_out.weight_alpha    0.025141
+          weights_step_100_mlp.0.weight_var    0.022884
+  weights_step_10_out.weight_frobenius_norm    0.021824
+    weights_start_out.weight_frobenius_norm    0.020917
+          weights_step_100_mlp.0.weight_std    0.020017
+weights_step_100_mlp.2.weight_spectral_norm    0.019352
+weights_step_100_mlp.1.weight_spectral_norm    0.017600
+          weights_step_100_out.weight_alpha    0.017463
+   weights_step_10_out.weight_spectral_norm    0.016660
+
+Execution Time: 9.921 seconds

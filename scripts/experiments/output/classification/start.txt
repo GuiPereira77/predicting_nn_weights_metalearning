@@ -1,0 +1,166 @@
+Dataframe Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 4320 entries, 0 to 4319
+Data columns (total 49 columns):
+ #   Column                                     Non-Null Count  Dtype  
+---  ------                                     --------------  -----  
+ 0   weights_start_mlp.0.weight_input_size      4320 non-null   float64
+ 1   weights_start_mlp.0.weight_output_size     4320 non-null   float64
+ 2   weights_start_mlp.0.weight_mean            4320 non-null   float64
+ 3   weights_start_mlp.0.weight_median          4320 non-null   float64
+ 4   weights_start_mlp.0.weight_std             4320 non-null   float64
+ 5   weights_start_mlp.0.weight_max             4320 non-null   float64
+ 6   weights_start_mlp.0.weight_min             4320 non-null   float64
+ 7   weights_start_mlp.0.weight_var             4320 non-null   float64
+ 8   weights_start_mlp.0.weight_frobenius_norm  4320 non-null   float64
+ 9   weights_start_mlp.0.weight_spectral_norm   4320 non-null   float64
+ 10  weights_start_mlp.0.weight_alpha           4320 non-null   float64
+ 11  weights_start_mlp.0.weight_alpha_hat       4320 non-null   float64
+ 12  weights_start_mlp.1.weight_input_size      4320 non-null   float64
+ 13  weights_start_mlp.1.weight_output_size     4320 non-null   float64
+ 14  weights_start_mlp.1.weight_mean            4320 non-null   float64
+ 15  weights_start_mlp.1.weight_median          4320 non-null   float64
+ 16  weights_start_mlp.1.weight_std             4320 non-null   float64
+ 17  weights_start_mlp.1.weight_max             4320 non-null   float64
+ 18  weights_start_mlp.1.weight_min             4320 non-null   float64
+ 19  weights_start_mlp.1.weight_var             4320 non-null   float64
+ 20  weights_start_mlp.1.weight_frobenius_norm  4320 non-null   float64
+ 21  weights_start_mlp.1.weight_spectral_norm   4320 non-null   float64
+ 22  weights_start_mlp.1.weight_alpha           4320 non-null   float64
+ 23  weights_start_mlp.1.weight_alpha_hat       4320 non-null   float64
+ 24  weights_start_mlp.2.weight_input_size      4320 non-null   float64
+ 25  weights_start_mlp.2.weight_output_size     4320 non-null   float64
+ 26  weights_start_mlp.2.weight_mean            4320 non-null   float64
+ 27  weights_start_mlp.2.weight_median          4320 non-null   float64
+ 28  weights_start_mlp.2.weight_std             4320 non-null   float64
+ 29  weights_start_mlp.2.weight_max             4320 non-null   float64
+ 30  weights_start_mlp.2.weight_min             4320 non-null   float64
+ 31  weights_start_mlp.2.weight_var             4320 non-null   float64
+ 32  weights_start_mlp.2.weight_frobenius_norm  4320 non-null   float64
+ 33  weights_start_mlp.2.weight_spectral_norm   4320 non-null   float64
+ 34  weights_start_mlp.2.weight_alpha           4320 non-null   float64
+ 35  weights_start_mlp.2.weight_alpha_hat       4320 non-null   float64
+ 36  weights_start_out.weight_input_size        4320 non-null   float64
+ 37  weights_start_out.weight_output_size       4320 non-null   float64
+ 38  weights_start_out.weight_mean              4320 non-null   float64
+ 39  weights_start_out.weight_median            4320 non-null   float64
+ 40  weights_start_out.weight_std               4320 non-null   float64
+ 41  weights_start_out.weight_max               4320 non-null   float64
+ 42  weights_start_out.weight_min               4320 non-null   float64
+ 43  weights_start_out.weight_var               4320 non-null   float64
+ 44  weights_start_out.weight_frobenius_norm    4320 non-null   float64
+ 45  weights_start_out.weight_spectral_norm     4320 non-null   float64
+ 46  weights_start_out.weight_alpha             4320 non-null   float64
+ 47  weights_start_out.weight_alpha_hat         4320 non-null   float64
+ 48  weights_start_model_variance               4320 non-null   float64
+dtypes: float64(49)
+memory usage: 1.6 MB
+None
+
+Mean and Std Scores:
+        Metric Mean Score Std Score
+     acc_score     0.3970    0.2190
+ roc_auc_score     0.7402    0.1143
+log_loss_score     0.9956    0.3387
+      f1_score     0.3357    0.3141
+
+Cross-Validation Results:
+Testing ['Tourism_Quarterly']:
+- acc_score: 0.4306
+- roc_auc_score: 0.8403
+- log_loss_score: 0.7678
+- f1_score: 0.3881
+              precision    recall  f1-score   support
+
+       False       1.00      0.31      0.47       590
+        True       0.24      1.00      0.39       130
+
+    accuracy                           0.43       720
+   macro avg       0.62      0.65      0.43       720
+weighted avg       0.86      0.43      0.45       720
+
+Testing ['Tourism_Monthly']:
+- acc_score: 0.0972
+- roc_auc_score: 0.9154
+- log_loss_score: 1.4308
+- f1_score: 0.1772
+              precision    recall  f1-score   support
+
+       False       1.00      0.00      0.00       650
+        True       0.10      1.00      0.18        70
+
+    accuracy                           0.10       720
+   macro avg       0.55      0.50      0.09       720
+weighted avg       0.91      0.10      0.02       720
+
+Testing ['M3_Quarterly']:
+- acc_score: 0.4097
+- roc_auc_score: 0.6866
+- log_loss_score: 0.9258
+- f1_score: 0.0000
+              precision    recall  f1-score   support
+
+       False       0.41      1.00      0.58       295
+        True       1.00      0.00      0.00       425
+
+    accuracy                           0.41       720
+   macro avg       0.70      0.50      0.29       720
+weighted avg       0.76      0.41      0.24       720
+
+Testing ['M3_Monthly']:
+- acc_score: 0.1736
+- roc_auc_score: 0.6513
+- log_loss_score: 1.4841
+- f1_score: 0.0000
+              precision    recall  f1-score   support
+
+       False       0.17      1.00      0.30       125
+        True       1.00      0.00      0.00       595
+
+    accuracy                           0.17       720
+   macro avg       0.59      0.50      0.15       720
+weighted avg       0.86      0.17      0.05       720
+
+Testing ['Gluonts_m1_quarterly']:
+- acc_score: 0.7639
+- roc_auc_score: 0.7687
+- log_loss_score: 0.6224
+- f1_score: 0.8595
+              precision    recall  f1-score   support
+
+       False       0.17      0.60      0.26        50
+        True       0.96      0.78      0.86       670
+
+    accuracy                           0.76       720
+   macro avg       0.56      0.69      0.56       720
+weighted avg       0.91      0.76      0.82       720
+
+Testing ['Gluonts_m1_monthly']:
+- acc_score: 0.5069
+- roc_auc_score: 0.5787
+- log_loss_score: 0.7424
+- f1_score: 0.5896
+              precision    recall  f1-score   support
+
+       False       0.31      0.51      0.38       215
+        True       0.71      0.50      0.59       505
+
+    accuracy                           0.51       720
+   macro avg       0.51      0.51      0.49       720
+weighted avg       0.59      0.51      0.53       720
+
+
+Average Feature Importance:
+                                   Feature  Importance
+           weights_start_out.weight_alpha    0.146271
+        weights_start_mlp.2.weight_median    0.109538
+   weights_start_out.weight_spectral_norm    0.095090
+         weights_start_mlp.0.weight_alpha    0.069840
+       weights_start_out.weight_alpha_hat    0.066488
+  weights_start_out.weight_frobenius_norm    0.047841
+weights_start_mlp.1.weight_frobenius_norm    0.045238
+           weights_start_mlp.2.weight_std    0.041603
+           weights_start_mlp.2.weight_max    0.029152
+weights_start_mlp.2.weight_frobenius_norm    0.027563
+
+Execution Time: 3.581 seconds
