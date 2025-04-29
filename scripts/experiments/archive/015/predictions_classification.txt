@@ -1,0 +1,730 @@
+Dataframe Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 4320 entries, 0 to 4319
+Columns: 625 entries, model_input_size to diff_step_500_step_400_mlp.2_weight_alpha_hat
+dtypes: float64(624), int32(1)
+memory usage: 20.6 MB
+None
+
+Mean and Std Scores:
+        Metric Mean Score Std Score
+     acc_score     0.4780    0.1418
+ roc_auc_score     0.7221    0.1224
+log_loss_score     0.9419    0.2445
+      f1_score     0.4662    0.1667
+
+Cross-Validation Results:
+Testing ['Tourism_Quarterly']:
+- acc_score: 0.5625
+- roc_auc_score: 0.9294
+- log_loss_score: 0.7833
+- f1_score: 0.4425
+              precision    recall  f1-score   support
+
+       False       0.98      0.47      0.64       590
+        True       0.29      0.96      0.44       130
+
+    accuracy                           0.56       720
+   macro avg       0.63      0.72      0.54       720
+weighted avg       0.86      0.56      0.60       720
+
+Testing ['Tourism_Monthly']:
+- acc_score: 0.3264
+- roc_auc_score: 0.6538
+- log_loss_score: 1.2135
+- f1_score: 0.2114
+              precision    recall  f1-score   support
+
+       False       0.97      0.26      0.41       650
+        True       0.12      0.93      0.21        70
+
+    accuracy                           0.33       720
+   macro avg       0.55      0.60      0.31       720
+weighted avg       0.89      0.33      0.39       720
+
+Testing ['M3_Quarterly']:
+- acc_score: 0.7014
+- roc_auc_score: 0.8487
+- log_loss_score: 0.6025
+- f1_score: 0.6906
+              precision    recall  f1-score   support
+
+       False       0.59      0.90      0.71       295
+        True       0.89      0.56      0.69       425
+
+    accuracy                           0.70       720
+   macro avg       0.74      0.73      0.70       720
+weighted avg       0.77      0.70      0.70       720
+
+Testing ['M3_Monthly']:
+- acc_score: 0.3264
+- roc_auc_score: 0.6765
+- log_loss_score: 1.3088
+- f1_score: 0.3121
+              precision    recall  f1-score   support
+
+       False       0.20      1.00      0.34       125
+        True       1.00      0.18      0.31       595
+
+    accuracy                           0.33       720
+   macro avg       0.60      0.59      0.33       720
+weighted avg       0.86      0.33      0.32       720
+
+Testing ['Gluonts_m1_quarterly']:
+- acc_score: 0.3819
+- roc_auc_score: 0.6104
+- log_loss_score: 0.8675
+- f1_score: 0.5189
+              precision    recall  f1-score   support
+
+       False       0.08      0.70      0.14        50
+        True       0.94      0.36      0.52       670
+
+    accuracy                           0.38       720
+   macro avg       0.51      0.53      0.33       720
+weighted avg       0.88      0.38      0.49       720
+
+Testing ['Gluonts_m1_monthly']:
+- acc_score: 0.5694
+- roc_auc_score: 0.6139
+- log_loss_score: 0.8759
+- f1_score: 0.6220
+              precision    recall  f1-score   support
+
+       False       0.38      0.72      0.50       215
+        True       0.81      0.50      0.62       505
+
+    accuracy                           0.57       720
+   macro avg       0.60      0.61      0.56       720
+weighted avg       0.68      0.57      0.59       720
+
+
+Average Feature Importance:
+                                            Feature  Importance
+             weights_step_400_out.weight_alpha_hat    0.029961
+             weights_step_500_out.weight_alpha_hat    0.029607
+                  weights_end_out.weight_alpha_hat    0.027029
+             weights_step_300_out.weight_alpha_hat    0.017610
+                 weights_step_500_mlp.0.weight_min    0.012346
+            weights_end_mlp.2.weight_spectral_norm    0.011727
+       weights_step_500_mlp.2.weight_spectral_norm    0.011624
+                      weights_end_mlp.0.weight_min    0.009944
+       weights_step_400_mlp.2.weight_spectral_norm    0.007641
+             diff_step_25_step_10_mlp.0_weight_std    0.007032
+          diff_step_400_step_300_mlp.2_weight_mean    0.006708
+                 weights_step_400_mlp.0.weight_min    0.006018
+          diff_step_500_step_400_mlp.2_weight_mean    0.005770
+          diff_step_200_step_100_mlp.1_weight_mean    0.005431
+           weights_step_500_mlp.1.weight_alpha_hat    0.005101
+                      weights_end_mlp.0.weight_max    0.005051
+             diff_step_50_step_25_mlp.0_weight_var    0.005021
+                 weights_step_500_mlp.0.weight_max    0.004884
+       weights_step_400_mlp.1.weight_spectral_norm    0.004775
+                weights_step_500_mlp.1.weight_mean    0.004715
+                     weights_end_mlp.1.weight_mean    0.004684
+       weights_step_500_mlp.1.weight_spectral_norm    0.004654
+                  weights_step_25_mlp.0.weight_max    0.004486
+             diff_step_25_step_10_mlp.0_weight_var    0.004401
+       weights_step_300_mlp.1.weight_spectral_norm    0.003895
+                weights_step_400_mlp.1.weight_mean    0.003855
+                 weights_step_100_mlp.0.weight_max    0.003829
+          diff_step_400_step_300_mlp.1_weight_mean    0.003828
+                  weights_step_50_mlp.0.weight_max    0.003752
+               weights_step_200_mlp.0.weight_alpha    0.003729
+  diff_step_50_step_25_mlp.0_weight_frobenius_norm    0.003681
+                 weights_step_200_mlp.0.weight_max    0.003680
+          diff_step_500_step_400_mlp.1_weight_mean    0.003648
+           diff_step_100_step_50_mlp.1_weight_mean    0.003629
+         weights_step_10_out.weight_frobenius_norm    0.003628
+            diff_step_25_step_10_mlp.1_weight_mean    0.003625
+  diff_step_100_step_50_mlp.2_weight_spectral_norm    0.003601
+          diff_step_500_step_400_mlp.0_weight_mean    0.003577
+         weights_step_100_out.weight_spectral_norm    0.003538
+            diff_step_50_step_25_mlp.1_weight_mean    0.003489
+      weights_step_100_mlp.0.weight_frobenius_norm    0.003440
+  diff_step_25_step_10_mlp.0_weight_frobenius_norm    0.003429
+              weights_step_400_mlp.1.weight_median    0.003390
+          diff_step_300_step_200_mlp.1_weight_mean    0.003335
+          diff_step_300_step_200_mlp.0_weight_mean    0.003335
+              weights_step_500_mlp.1.weight_median    0.003334
+               weights_step_300_mlp.0.weight_alpha    0.003324
+                 weights_step_200_mlp.0.weight_min    0.003319
+           weights_step_400_mlp.1.weight_alpha_hat    0.003301
+            weights_step_10_mlp.1.weight_alpha_hat    0.003276
+ diff_step_500_step_400_mlp.2_weight_spectral_norm    0.003262
+                 weights_step_300_mlp.0.weight_min    0.003244
+       diff_step_25_step_10_mlp.0_weight_alpha_hat    0.003239
+             weights_step_200_out.weight_alpha_hat    0.003201
+            weights_step_50_mlp.0.weight_alpha_hat    0.003184
+       weights_step_200_mlp.2.weight_spectral_norm    0.003178
+            diff_step_100_step_50_mlp.2_weight_std    0.003168
+             diff_step_25_step_10_mlp.2_weight_var    0.003137
+          diff_step_400_step_300_mlp.0_weight_mean    0.003127
+            diff_step_25_step_10_mlp.2_weight_mean    0.003092
+           diff_step_400_step_300_mlp.1_weight_std    0.003041
+               weights_step_100_mlp.0.weight_alpha    0.003008
+            diff_step_50_step_25_mlp.2_weight_mean    0.002971
+               weights_step_50_mlp.0.weight_median    0.002969
+           diff_step_500_step_400_mlp.1_weight_var    0.002969
+                 weights_step_200_mlp.2.weight_max    0.002941
+           diff_step_300_step_200_mlp.2_weight_var    0.002937
+                 weights_step_50_mlp.2.weight_mean    0.002935
+           diff_step_200_step_100_mlp.0_weight_var    0.002930
+                  weights_start_mlp.1.weight_alpha    0.002922
+       weights_step_300_mlp.2.weight_spectral_norm    0.002870
+  diff_step_100_step_50_mlp.0_weight_spectral_norm    0.002864
+         weights_step_400_out.weight_spectral_norm    0.002858
+                 weights_step_500_mlp.1.weight_min    0.002839
+                     weights_end_mlp.2.weight_mean    0.002831
+             diff_step_25_step_10_mlp.1_weight_std    0.002788
+                 weights_step_300_mlp.0.weight_std    0.002787
+                 weights_step_200_out.weight_alpha    0.002783
+                 weights_step_400_mlp.0.weight_max    0.002783
+               weights_step_400_mlp.1.weight_alpha    0.002765
+                weights_step_300_mlp.1.weight_mean    0.002748
+                   weights_end_mlp.1.weight_median    0.002746
+           diff_step_500_step_400_mlp.2_weight_var    0.002744
+                 weights_step_400_mlp.0.weight_std    0.002738
+                weights_step_300_mlp.0.weight_mean    0.002686
+       weights_step_400_mlp.0.weight_spectral_norm    0.002659
+                weights_step_25_mlp.1.weight_alpha    0.002638
+      weights_step_300_mlp.2.weight_frobenius_norm    0.002604
+      diff_step_100_step_50_mlp.2_weight_alpha_hat    0.002599
+                weights_step_200_mlp.0.weight_mean    0.002598
+                weights_step_400_mlp.2.weight_mean    0.002592
+            weights_end_mlp.1.weight_spectral_norm    0.002591
+ diff_step_200_step_100_mlp.0_weight_spectral_norm    0.002582
+           weights_step_300_mlp.2.weight_alpha_hat    0.002568
+                weights_step_200_mlp.1.weight_mean    0.002567
+                      weights_end_mlp.1.weight_min    0.002550
+ diff_step_300_step_200_mlp.1_weight_spectral_norm    0.002549
+                   weights_step_100_out.weight_max    0.002547
+                weights_end_mlp.1.weight_alpha_hat    0.002547
+                 weights_step_300_out.weight_alpha    0.002518
+ diff_step_500_step_400_mlp.0_weight_spectral_norm    0.002512
+                weights_step_100_mlp.2.weight_mean    0.002511
+                   weights_step_300_model_variance    0.002510
+                    weights_step_10_out.weight_min    0.002493
+             diff_step_50_step_25_mlp.2_weight_std    0.002486
+                 weights_step_300_mlp.0.weight_max    0.002468
+     diff_step_400_step_300_mlp.2_weight_alpha_hat    0.002466
+         weights_step_200_out.weight_spectral_norm    0.002453
+diff_step_500_step_400_mlp.2_weight_frobenius_norm    0.002453
+      weights_step_400_mlp.1.weight_frobenius_norm    0.002442
+              weights_step_500_mlp.0.weight_median    0.002437
+           diff_step_400_step_300_mlp.0_weight_var    0.002414
+         weights_step_25_out.weight_frobenius_norm    0.002412
+                 weights_step_500_mlp.0.weight_std    0.002391
+diff_step_400_step_300_mlp.1_weight_frobenius_norm    0.002390
+              weights_step_200_mlp.1.weight_median    0.002388
+        weights_step_50_mlp.0.weight_spectral_norm    0.002368
+           weights_step_500_mlp.2.weight_alpha_hat    0.002367
+                weights_step_500_mlp.2.weight_mean    0.002366
+                 weights_step_50_mlp.1.weight_mean    0.002364
+           diff_step_500_step_400_mlp.1_weight_std    0.002363
+ diff_step_400_step_300_mlp.1_weight_spectral_norm    0.002362
+                weights_step_500_mlp.0.weight_mean    0.002357
+            weights_step_10_mlp.0.weight_alpha_hat    0.002347
+            diff_step_100_step_50_mlp.0_weight_std    0.002337
+                  weights_step_200_out.weight_mean    0.002327
+                weights_step_300_mlp.2.weight_mean    0.002326
+                  weights_step_50_mlp.0.weight_min    0.002325
+diff_step_500_step_400_mlp.1_weight_frobenius_norm    0.002324
+           diff_step_500_step_400_mlp.0_weight_std    0.002303
+              weights_step_300_mlp.1.weight_median    0.002289
+ diff_step_100_step_50_mlp.2_weight_frobenius_norm    0.002286
+  diff_step_50_step_25_mlp.2_weight_frobenius_norm    0.002285
+              weights_step_200_mlp.2.weight_median    0.002282
+                 weights_step_500_out.weight_alpha    0.002274
+        weights_step_25_mlp.1.weight_spectral_norm    0.002272
+           diff_step_200_step_100_mlp.0_weight_std    0.002272
+ diff_step_300_step_200_mlp.2_weight_spectral_norm    0.002271
+ diff_step_400_step_300_mlp.0_weight_spectral_norm    0.002267
+      weights_step_300_mlp.0.weight_frobenius_norm    0.002265
+       weights_step_50_mlp.0.weight_frobenius_norm    0.002232
+      weights_step_100_mlp.2.weight_frobenius_norm    0.002220
+                 weights_step_300_mlp.0.weight_var    0.002219
+                weights_step_400_out.weight_median    0.002213
+       weights_step_200_mlp.1.weight_spectral_norm    0.002194
+                  weights_step_25_mlp.1.weight_max    0.002193
+       weights_step_25_mlp.2.weight_frobenius_norm    0.002193
+     diff_step_300_step_200_mlp.1_weight_alpha_hat    0.002172
+           diff_step_500_step_400_mlp.0_weight_var    0.002163
+               weights_step_50_mlp.1.weight_median    0.002145
+      diff_step_100_step_50_mlp.1_weight_alpha_hat    0.002144
+diff_step_400_step_300_mlp.0_weight_frobenius_norm    0.002136
+                   weights_step_200_out.weight_min    0.002130
+   diff_step_25_step_10_mlp.0_weight_spectral_norm    0.002112
+          weights_step_50_out.weight_spectral_norm    0.002110
+     diff_step_200_step_100_mlp.2_weight_alpha_hat    0.002102
+            weights_step_25_mlp.0.weight_alpha_hat    0.002098
+               weights_step_500_mlp.1.weight_alpha    0.002089
+      weights_step_100_mlp.1.weight_frobenius_norm    0.002081
+ diff_step_200_step_100_mlp.1_weight_spectral_norm    0.002081
+              weights_step_400_mlp.0.weight_median    0.002076
+                    weights_step_10_model_variance    0.002074
+        weights_step_50_mlp.1.weight_spectral_norm    0.002054
+                 weights_step_100_mlp.0.weight_std    0.002052
+            diff_step_100_step_50_mlp.1_weight_std    0.002045
+              weights_step_100_mlp.0.weight_median    0.002045
+           weights_step_500_mlp.0.weight_alpha_hat    0.002030
+       weights_step_300_mlp.0.weight_spectral_norm    0.002010
+diff_step_300_step_200_mlp.0_weight_frobenius_norm    0.002008
+             weights_step_100_out.weight_alpha_hat    0.002008
+                  weights_step_10_mlp.0.weight_max    0.002000
+                   weights_end_mlp.0.weight_median    0.002000
+                                 model_scaler_type    0.001986
+               weights_step_200_mlp.1.weight_alpha    0.001976
+          diff_step_300_step_200_mlp.2_weight_mean    0.001972
+       weights_step_100_mlp.0.weight_spectral_norm    0.001965
+              weights_step_10_out.weight_alpha_hat    0.001958
+                  weights_step_500_out.weight_mean    0.001932
+               weights_step_100_mlp.1.weight_alpha    0.001924
+               weights_step_500_mlp.2.weight_alpha    0.001922
+     diff_step_500_step_400_mlp.2_weight_alpha_hat    0.001922
+                weights_step_10_mlp.1.weight_alpha    0.001920
+     diff_step_400_step_300_mlp.0_weight_alpha_hat    0.001915
+           diff_step_100_step_50_mlp.2_weight_mean    0.001911
+        weights_step_400_out.weight_frobenius_norm    0.001900
+                weights_step_50_mlp.2.weight_alpha    0.001898
+                 weights_step_400_mlp.1.weight_max    0.001889
+   diff_step_25_step_10_mlp.2_weight_spectral_norm    0.001879
+           diff_step_400_step_300_mlp.1_weight_var    0.001879
+                 weights_step_200_mlp.0.weight_std    0.001875
+                 weights_step_25_mlp.1.weight_mean    0.001866
+ diff_step_400_step_300_mlp.2_weight_spectral_norm    0.001854
+              weights_step_200_mlp.0.weight_median    0.001849
+                   weights_step_200_model_variance    0.001841
+                 weights_step_200_mlp.1.weight_min    0.001836
+           diff_step_100_step_50_mlp.0_weight_mean    0.001830
+             weights_end_out.weight_frobenius_norm    0.001806
+           weights_step_400_mlp.0.weight_alpha_hat    0.001800
+               weights_step_300_mlp.1.weight_alpha    0.001794
+           weights_step_200_mlp.1.weight_alpha_hat    0.001777
+            diff_step_100_step_50_mlp.0_weight_var    0.001776
+              weights_step_400_mlp.2.weight_median    0.001776
+                weights_step_100_mlp.0.weight_mean    0.001775
+             diff_step_25_step_10_mlp.1_weight_var    0.001771
+           diff_step_400_step_300_mlp.0_weight_std    0.001764
+            diff_step_100_step_50_mlp.1_weight_var    0.001738
+      weights_step_200_mlp.0.weight_frobenius_norm    0.001732
+             diff_step_50_step_25_mlp.0_weight_std    0.001725
+           diff_step_500_step_400_mlp.2_weight_std    0.001721
+                 weights_step_400_mlp.1.weight_min    0.001721
+                  weights_step_10_mlp.1.weight_max    0.001720
+                weights_step_200_mlp.2.weight_mean    0.001717
+           weights_step_200_mlp.0.weight_alpha_hat    0.001716
+                weights_step_50_mlp.1.weight_alpha    0.001707
+       weights_step_200_mlp.0.weight_spectral_norm    0.001693
+           weights_step_100_mlp.2.weight_alpha_hat    0.001670
+                    weights_step_25_out.weight_min    0.001662
+           diff_step_200_step_100_mlp.2_weight_std    0.001659
+diff_step_500_step_400_mlp.0_weight_frobenius_norm    0.001658
+                   weights_step_300_out.weight_min    0.001654
+     diff_step_200_step_100_mlp.1_weight_alpha_hat    0.001638
+diff_step_200_step_100_mlp.0_weight_frobenius_norm    0.001635
+           weights_step_300_mlp.0.weight_alpha_hat    0.001632
+                  weights_step_10_mlp.0.weight_min    0.001627
+            weights_step_50_mlp.2.weight_alpha_hat    0.001626
+ diff_step_100_step_50_mlp.0_weight_frobenius_norm    0.001620
+           diff_step_400_step_300_mlp.2_weight_var    0.001617
+             diff_step_25_step_10_mlp.2_weight_std    0.001612
+                       weights_end_out.weight_mean    0.001609
+  diff_step_25_step_10_mlp.2_weight_frobenius_norm    0.001607
+                 weights_step_25_mlp.2.weight_mean    0.001604
+                weights_step_10_mlp.2.weight_alpha    0.001603
+           diff_step_300_step_200_mlp.0_weight_std    0.001599
+                 weights_step_25_mlp.0.weight_mean    0.001574
+               weights_step_200_mlp.2.weight_alpha    0.001574
+       weights_step_25_mlp.0.weight_frobenius_norm    0.001572
+            weights_step_50_mlp.1.weight_alpha_hat    0.001571
+                   weights_step_25_out.weight_mean    0.001571
+                    weights_step_25_out.weight_std    0.001566
+              weights_step_100_mlp.2.weight_median    0.001564
+         weights_step_300_out.weight_spectral_norm    0.001564
+       diff_step_25_step_10_mlp.1_weight_alpha_hat    0.001558
+                 weights_step_100_mlp.2.weight_max    0.001558
+               weights_step_50_mlp.2.weight_median    0.001550
+ diff_step_200_step_100_mlp.2_weight_spectral_norm    0.001545
+                 weights_step_10_out.weight_median    0.001544
+  diff_step_25_step_10_mlp.1_weight_frobenius_norm    0.001538
+                 weights_step_200_mlp.0.weight_var    0.001529
+                    weights_end_mlp.1.weight_alpha    0.001525
+                weights_step_400_mlp.0.weight_mean    0.001521
+                 weights_step_10_mlp.2.weight_mean    0.001518
+               weights_step_25_mlp.1.weight_median    0.001509
+                      weights_start_out.weight_min    0.001492
+                 weights_step_100_mlp.0.weight_min    0.001491
+                   weights_step_10_out.weight_mean    0.001487
+diff_step_200_step_100_mlp.2_weight_frobenius_norm    0.001486
+            diff_step_100_step_50_mlp.2_weight_var    0.001482
+          diff_step_200_step_100_mlp.0_weight_mean    0.001479
+                   weights_step_400_out.weight_min    0.001474
+        weights_step_10_mlp.2.weight_spectral_norm    0.001472
+                  weights_step_400_out.weight_mean    0.001463
+           weights_step_200_mlp.2.weight_alpha_hat    0.001462
+                    weights_start_mlp.0.weight_max    0.001462
+           diff_step_300_step_200_mlp.2_weight_std    0.001462
+                 weights_step_50_mlp.0.weight_mean    0.001455
+   diff_step_50_step_25_mlp.2_weight_spectral_norm    0.001445
+                   weights_step_50_out.weight_mean    0.001444
+     diff_step_500_step_400_mlp.1_weight_alpha_hat    0.001444
+                   weights_step_200_out.weight_std    0.001443
+                    weights_step_10_out.weight_max    0.001443
+       diff_step_50_step_25_mlp.2_weight_alpha_hat    0.001443
+           weights_step_100_mlp.0.weight_alpha_hat    0.001441
+              weights_step_300_mlp.0.weight_median    0.001436
+         weights_step_500_out.weight_spectral_norm    0.001435
+           weights_step_100_mlp.1.weight_alpha_hat    0.001433
+       weights_step_10_mlp.2.weight_frobenius_norm    0.001430
+                weights_end_mlp.2.weight_alpha_hat    0.001426
+   diff_step_50_step_25_mlp.1_weight_spectral_norm    0.001423
+               weights_step_25_mlp.0.weight_median    0.001420
+              weights_start_mlp.1.weight_alpha_hat    0.001418
+       weights_step_10_mlp.0.weight_frobenius_norm    0.001417
+             diff_step_50_step_25_mlp.1_weight_std    0.001417
+       weights_step_100_mlp.2.weight_spectral_norm    0.001415
+                  weights_step_10_mlp.1.weight_std    0.001408
+                weights_step_50_mlp.0.weight_alpha    0.001405
+           diff_step_400_step_300_mlp.2_weight_std    0.001400
+                 weights_step_400_out.weight_alpha    0.001400
+diff_step_400_step_300_mlp.2_weight_frobenius_norm    0.001389
+                weights_step_25_mlp.0.weight_alpha    0.001387
+           weights_step_300_mlp.1.weight_alpha_hat    0.001387
+           weights_step_400_mlp.2.weight_alpha_hat    0.001381
+          weights_step_25_out.weight_spectral_norm    0.001379
+               weights_step_10_mlp.2.weight_median    0.001378
+                  weights_step_10_mlp.2.weight_max    0.001374
+  diff_step_50_step_25_mlp.1_weight_frobenius_norm    0.001367
+                 weights_step_100_mlp.0.weight_var    0.001365
+            weights_step_25_mlp.1.weight_alpha_hat    0.001355
+        weights_step_25_mlp.2.weight_spectral_norm    0.001355
+          weights_step_10_out.weight_spectral_norm    0.001346
+ diff_step_500_step_400_mlp.1_weight_spectral_norm    0.001338
+                  weights_step_10_out.weight_alpha    0.001334
+           diff_step_200_step_100_mlp.1_weight_std    0.001328
+        weights_step_10_mlp.0.weight_spectral_norm    0.001315
+           diff_step_300_step_200_mlp.1_weight_std    0.001313
+        weights_step_50_mlp.2.weight_spectral_norm    0.001313
+      weights_step_400_mlp.0.weight_frobenius_norm    0.001307
+        weights_step_500_out.weight_frobenius_norm    0.001305
+                weights_step_300_out.weight_median    0.001294
+     diff_step_400_step_300_mlp.1_weight_alpha_hat    0.001283
+              weights_end_out.weight_spectral_norm    0.001283
+                 weights_step_100_out.weight_alpha    0.001278
+           diff_step_200_step_100_mlp.2_weight_var    0.001274
+               weights_step_10_mlp.1.weight_median    0.001270
+        weights_step_300_out.weight_frobenius_norm    0.001266
+       weights_step_500_mlp.0.weight_spectral_norm    0.001265
+                    weights_start_mlp.0.weight_min    0.001261
+            weights_step_10_mlp.2.weight_alpha_hat    0.001258
+                 weights_step_50_out.weight_median    0.001252
+           diff_step_200_step_100_mlp.1_weight_var    0.001248
+       weights_step_25_mlp.1.weight_frobenius_norm    0.001247
+                 weights_step_200_mlp.1.weight_max    0.001247
+ diff_step_100_step_50_mlp.1_weight_frobenius_norm    0.001242
+                  weights_step_50_mlp.0.weight_var    0.001241
+            diff_step_25_step_10_mlp.0_weight_mean    0.001229
+               weights_step_300_mlp.2.weight_alpha    0.001221
+                  weights_step_300_out.weight_mean    0.001218
+                   weights_step_200_out.weight_max    0.001195
+                 weights_step_300_mlp.1.weight_min    0.001194
+diff_step_300_step_200_mlp.1_weight_frobenius_norm    0.001187
+                   weights_step_200_out.weight_var    0.001182
+           diff_step_300_step_200_mlp.0_weight_var    0.001180
+   diff_step_25_step_10_mlp.1_weight_spectral_norm    0.001179
+diff_step_200_step_100_mlp.1_weight_frobenius_norm    0.001173
+                weights_step_25_mlp.2.weight_alpha    0.001164
+                  weights_step_50_mlp.0.weight_std    0.001161
+                  weights_step_25_mlp.0.weight_std    0.001158
+                   weights_step_100_out.weight_std    0.001140
+                  weights_step_10_mlp.0.weight_var    0.001138
+                                  model_input_size    0.001130
+                                model_total_params    0.001128
+      weights_step_500_mlp.1.weight_frobenius_norm    0.001128
+                  weights_step_50_out.weight_alpha    0.001125
+ diff_step_300_step_200_mlp.0_weight_spectral_norm    0.001124
+                 weights_step_400_mlp.2.weight_min    0.001121
+               weights_step_100_mlp.2.weight_alpha    0.001114
+          diff_step_200_step_100_mlp.2_weight_mean    0.001108
+                 weights_step_100_mlp.2.weight_std    0.001096
+                 weights_step_10_mlp.0.weight_mean    0.001086
+diff_step_300_step_200_mlp.2_weight_frobenius_norm    0.001083
+            weights_end_mlp.0.weight_spectral_norm    0.001081
+             weights_start_mlp.0.weight_input_size    0.001080
+        weights_step_10_mlp.1.weight_spectral_norm    0.001077
+      weights_step_200_mlp.1.weight_frobenius_norm    0.001075
+                 weights_step_100_mlp.2.weight_min    0.001068
+                 weights_step_300_mlp.1.weight_max    0.001067
+       diff_step_50_step_25_mlp.1_weight_alpha_hat    0.001062
+                 weights_step_10_mlp.1.weight_mean    0.001060
+     diff_step_500_step_400_mlp.0_weight_alpha_hat    0.001059
+                  weights_step_10_mlp.0.weight_std    0.001057
+                  weights_step_50_mlp.1.weight_max    0.001054
+       weights_step_50_mlp.2.weight_frobenius_norm    0.001052
+                 weights_step_300_mlp.2.weight_max    0.001050
+              weights_step_300_mlp.2.weight_median    0.001050
+               weights_step_400_mlp.0.weight_alpha    0.001043
+           diff_step_300_step_200_mlp.1_weight_var    0.001042
+            weights_step_25_mlp.2.weight_alpha_hat    0.001041
+                 weights_step_500_mlp.2.weight_min    0.001037
+                    weights_step_50_out.weight_std    0.001036
+                     weights_end_mlp.0.weight_mean    0.001035
+       diff_step_50_step_25_mlp.0_weight_alpha_hat    0.001032
+           weights_end_mlp.1.weight_frobenius_norm    0.001031
+                 weights_step_300_mlp.1.weight_std    0.001023
+       weights_step_10_mlp.1.weight_frobenius_norm    0.001019
+                 weights_step_100_mlp.1.weight_min    0.001013
+     diff_step_200_step_100_mlp.0_weight_alpha_hat    0.001010
+                  weights_step_25_mlp.2.weight_max    0.001005
+                   weights_step_500_model_variance    0.001004
+                weights_step_500_out.weight_median    0.000993
+       weights_step_100_mlp.1.weight_spectral_norm    0.000981
+                     weights_end_out.weight_median    0.000980
+                  weights_step_50_mlp.1.weight_min    0.000972
+                    weights_step_25_model_variance    0.000967
+                  weights_step_25_mlp.2.weight_std    0.000966
+              weights_step_500_mlp.2.weight_median    0.000966
+      weights_step_200_mlp.2.weight_frobenius_norm    0.000959
+               weights_step_25_mlp.2.weight_median    0.000955
+                    weights_start_mlp.0.weight_std    0.000954
+           weights_end_mlp.0.weight_frobenius_norm    0.000944
+             diff_step_50_step_25_mlp.1_weight_var    0.000941
+                 weights_step_200_mlp.1.weight_std    0.000940
+                  weights_step_100_out.weight_mean    0.000936
+        weights_step_100_out.weight_frobenius_norm    0.000936
+          weights_start_mlp.1.weight_spectral_norm    0.000927
+              weights_step_25_out.weight_alpha_hat    0.000922
+                weights_step_100_out.weight_median    0.000913
+                 weights_step_300_mlp.1.weight_var    0.000902
+                  weights_step_10_mlp.1.weight_min    0.000892
+                 weights_step_100_mlp.1.weight_max    0.000878
+                    weights_step_50_model_variance    0.000875
+                   weights_start_mlp.0.weight_mean    0.000873
+                weights_end_mlp.0.weight_alpha_hat    0.000870
+                weights_step_10_mlp.0.weight_alpha    0.000863
+                    weights_step_10_out.weight_std    0.000853
+                 weights_step_500_mlp.1.weight_max    0.000842
+              weights_step_100_mlp.1.weight_median    0.000833
+         weights_step_50_out.weight_frobenius_norm    0.000827
+                  weights_step_25_mlp.2.weight_min    0.000817
+         weights_start_mlp.0.weight_frobenius_norm    0.000811
+                  weights_step_10_mlp.1.weight_var    0.000808
+                   weights_step_300_out.weight_max    0.000805
+      diff_step_100_step_50_mlp.0_weight_alpha_hat    0.000805
+                 weights_step_25_out.weight_median    0.000805
+                  weights_step_25_out.weight_alpha    0.000804
+                   weights_step_300_out.weight_std    0.000800
+                                     model_horizon    0.000798
+                  weights_step_25_mlp.1.weight_min    0.000795
+                 weights_step_200_mlp.2.weight_min    0.000786
+                  weights_step_10_mlp.2.weight_std    0.000784
+                weights_step_200_out.weight_median    0.000774
+                        weights_end_out.weight_min    0.000766
+                 weights_step_400_mlp.0.weight_var    0.000766
+               weights_step_10_mlp.0.weight_median    0.000760
+                   weights_step_500_out.weight_min    0.000759
+                      weights_end_out.weight_alpha    0.000750
+                  weights_step_25_mlp.2.weight_var    0.000726
+                  weights_step_25_mlp.0.weight_min    0.000719
+               weights_step_400_mlp.2.weight_alpha    0.000707
+                                 model_hidden_size    0.000692
+            diff_step_50_step_25_mlp.0_weight_mean    0.000677
+                weights_step_100_mlp.1.weight_mean    0.000676
+                 weights_step_100_mlp.1.weight_std    0.000658
+                  weights_step_50_mlp.2.weight_max    0.000651
+                     weights_start_out.weight_mean    0.000641
+                    weights_step_25_out.weight_var    0.000625
+           weights_start_out.weight_frobenius_norm    0.000623
+               weights_step_500_mlp.0.weight_alpha    0.000620
+                  weights_step_50_mlp.1.weight_std    0.000611
+                  weights_start_mlp.2.weight_alpha    0.000611
+                   weights_step_300_out.weight_var    0.000611
+       weights_step_50_mlp.1.weight_frobenius_norm    0.000586
+     diff_step_300_step_200_mlp.2_weight_alpha_hat    0.000586
+                  weights_step_50_mlp.1.weight_var    0.000578
+                    weights_step_25_out.weight_max    0.000574
+        weights_step_200_out.weight_frobenius_norm    0.000570
+                  weights_step_10_mlp.2.weight_min    0.000569
+                    weights_step_50_out.weight_min    0.000568
+                 weights_step_300_mlp.2.weight_min    0.000566
+                  weights_step_10_mlp.2.weight_var    0.000541
+  diff_step_100_step_50_mlp.1_weight_spectral_norm    0.000533
+                               model_learning_rate    0.000526
+                   weights_step_400_model_variance    0.000513
+                    weights_start_mlp.1.weight_std    0.000513
+                   weights_step_100_model_variance    0.000505
+                 weights_start_mlp.0.weight_median    0.000497
+   diff_step_50_step_25_mlp.0_weight_spectral_norm    0.000492
+                    weights_start_mlp.1.weight_var    0.000480
+                                  model_batch_size    0.000472
+              weights_start_mlp.0.weight_alpha_hat    0.000459
+          weights_start_mlp.0.weight_spectral_norm    0.000455
+      weights_step_400_mlp.2.weight_frobenius_norm    0.000455
+                  weights_step_50_mlp.2.weight_min    0.000448
+                   weights_start_mlp.1.weight_mean    0.000445
+                weights_start_out.weight_alpha_hat    0.000443
+                 weights_step_500_mlp.2.weight_max    0.000418
+             diff_step_50_step_25_mlp.2_weight_var    0.000416
+      weights_step_500_mlp.2.weight_frobenius_norm    0.000409
+              weights_step_50_out.weight_alpha_hat    0.000404
+                  weights_start_mlp.0.weight_alpha    0.000402
+                      weights_end_mlp.2.weight_max    0.000394
+                    weights_step_50_out.weight_var    0.000391
+              weights_start_mlp.2.weight_alpha_hat    0.000383
+                 weights_step_400_mlp.2.weight_max    0.000375
+      weights_step_300_mlp.1.weight_frobenius_norm    0.000366
+        weights_step_25_mlp.0.weight_spectral_norm    0.000341
+                        weights_end_out.weight_var    0.000339
+                   weights_step_400_out.weight_max    0.000326
+         weights_start_mlp.1.weight_frobenius_norm    0.000323
+                   weights_step_400_out.weight_std    0.000313
+                    weights_start_mlp.0.weight_var    0.000311
+                   weights_step_500_out.weight_std    0.000289
+      weights_step_500_mlp.0.weight_frobenius_norm    0.000286
+                    weights_end_mlp.0.weight_alpha    0.000261
+                   weights_step_100_out.weight_min    0.000239
+                  weights_step_25_mlp.0.weight_var    0.000228
+                    weights_end_mlp.2.weight_alpha    0.000228
+                    weights_step_50_out.weight_max    0.000195
+                  weights_step_25_mlp.1.weight_std    0.000183
+                    weights_step_10_out.weight_var    0.000164
+                   weights_start_out.weight_median    0.000157
+                        weights_end_out.weight_max    0.000151
+                   weights_step_500_out.weight_var    0.000120
+                   weights_step_500_out.weight_max    0.000101
+            weights_start_mlp.0.weight_output_size    0.000099
+                 weights_start_mlp.1.weight_median    0.000093
+                  weights_step_25_mlp.1.weight_var    0.000091
+                 weights_step_300_mlp.2.weight_std    0.000081
+     diff_step_300_step_200_mlp.0_weight_alpha_hat    0.000058
+                 weights_step_200_mlp.2.weight_std    0.000055
+                      weights_end_mlp.1.weight_max    0.000054
+                 weights_step_500_mlp.2.weight_std    0.000051
+                   weights_end_mlp.2.weight_median    0.000048
+                      weights_end_mlp.2.weight_min    0.000047
+                   weights_start_mlp.2.weight_mean    0.000039
+          weights_start_mlp.2.weight_spectral_norm    0.000023
+            weights_start_out.weight_spectral_norm    0.000022
+                 weights_start_mlp.2.weight_median    0.000000
+                    weights_start_mlp.2.weight_std    0.000000
+                    weights_start_mlp.2.weight_max    0.000000
+                 weights_step_100_mlp.2.weight_var    0.000000
+         weights_step_100_mlp.2.weight_output_size    0.000000
+            weights_step_100_out.weight_input_size    0.000000
+            weights_step_300_out.weight_input_size    0.000000
+            weights_start_mlp.1.weight_output_size    0.000000
+            weights_start_mlp.2.weight_output_size    0.000000
+          weights_step_100_mlp.2.weight_input_size    0.000000
+                                  model_num_layers    0.000000
+                                   model_max_steps    0.000000
+                  weights_step_50_mlp.2.weight_std    0.000000
+       diff_step_25_step_10_mlp.2_weight_alpha_hat    0.000000
+                  weights_step_50_mlp.2.weight_var    0.000000
+             weights_step_50_out.weight_input_size    0.000000
+            weights_step_50_out.weight_output_size    0.000000
+          weights_step_100_mlp.0.weight_input_size    0.000000
+         weights_step_100_mlp.0.weight_output_size    0.000000
+             weights_start_mlp.1.weight_input_size    0.000000
+                    weights_start_mlp.2.weight_var    0.000000
+          weights_step_100_mlp.1.weight_input_size    0.000000
+         weights_step_100_mlp.1.weight_output_size    0.000000
+                    weights_start_mlp.1.weight_max    0.000000
+                    weights_start_mlp.1.weight_min    0.000000
+                 weights_step_100_mlp.1.weight_var    0.000000
+             weights_start_mlp.2.weight_input_size    0.000000
+          weights_step_50_mlp.1.weight_output_size    0.000000
+           weights_step_50_mlp.1.weight_input_size    0.000000
+                    weights_start_mlp.2.weight_min    0.000000
+           weights_end_mlp.2.weight_frobenius_norm    0.000000
+           weights_step_100_out.weight_output_size    0.000000
+                 weights_step_500_mlp.2.weight_var    0.000000
+           weights_step_400_out.weight_output_size    0.000000
+                   weights_step_400_out.weight_var    0.000000
+         weights_step_300_mlp.0.weight_output_size    0.000000
+          weights_step_300_mlp.0.weight_input_size    0.000000
+          weights_step_500_mlp.0.weight_input_size    0.000000
+         weights_step_500_mlp.0.weight_output_size    0.000000
+           weights_step_50_mlp.2.weight_input_size    0.000000
+            weights_step_10_out.weight_output_size    0.000000
+             weights_step_10_out.weight_input_size    0.000000
+                 weights_step_500_mlp.0.weight_var    0.000000
+             weights_step_25_out.weight_input_size    0.000000
+          weights_step_500_mlp.1.weight_input_size    0.000000
+         weights_step_500_mlp.1.weight_output_size    0.000000
+            weights_step_25_out.weight_output_size    0.000000
+                 weights_step_500_mlp.1.weight_std    0.000000
+                 weights_step_500_mlp.1.weight_var    0.000000
+           weights_step_200_out.weight_output_size    0.000000
+            weights_step_200_out.weight_input_size    0.000000
+          weights_step_500_mlp.2.weight_input_size    0.000000
+            weights_step_400_out.weight_input_size    0.000000
+                 weights_step_400_mlp.2.weight_var    0.000000
+                 weights_step_400_mlp.2.weight_std    0.000000
+         weights_step_400_mlp.1.weight_output_size    0.000000
+                 weights_step_300_mlp.2.weight_var    0.000000
+          weights_step_25_mlp.1.weight_output_size    0.000000
+           weights_step_25_mlp.1.weight_input_size    0.000000
+          weights_step_400_mlp.0.weight_input_size    0.000000
+         weights_step_400_mlp.0.weight_output_size    0.000000
+         weights_step_300_mlp.2.weight_output_size    0.000000
+          weights_step_300_mlp.2.weight_input_size    0.000000
+          weights_step_400_mlp.1.weight_input_size    0.000000
+                 weights_step_400_mlp.1.weight_std    0.000000
+          weights_step_25_mlp.2.weight_output_size    0.000000
+           weights_step_25_mlp.2.weight_input_size    0.000000
+                 weights_step_400_mlp.1.weight_var    0.000000
+         weights_step_300_mlp.1.weight_output_size    0.000000
+          weights_step_25_mlp.0.weight_output_size    0.000000
+           weights_step_25_mlp.0.weight_input_size    0.000000
+          weights_step_300_mlp.1.weight_input_size    0.000000
+          weights_step_400_mlp.2.weight_input_size    0.000000
+         weights_step_400_mlp.2.weight_output_size    0.000000
+         weights_step_500_mlp.2.weight_output_size    0.000000
+          weights_step_10_mlp.2.weight_output_size    0.000000
+         weights_start_mlp.2.weight_frobenius_norm    0.000000
+           weights_step_10_mlp.2.weight_input_size    0.000000
+                weights_end_out.weight_output_size    0.000000
+                        weights_end_out.weight_std    0.000000
+         weights_step_200_mlp.1.weight_output_size    0.000000
+          weights_step_200_mlp.1.weight_input_size    0.000000
+                        weights_end_model_variance    0.000000
+           weights_step_50_mlp.0.weight_input_size    0.000000
+         weights_step_200_mlp.0.weight_output_size    0.000000
+          weights_step_10_mlp.0.weight_output_size    0.000000
+           weights_step_10_mlp.0.weight_input_size    0.000000
+                      weights_start_model_variance    0.000000
+                    weights_start_out.weight_alpha    0.000000
+                      weights_start_out.weight_var    0.000000
+          weights_step_200_mlp.0.weight_input_size    0.000000
+                      weights_start_out.weight_max    0.000000
+                      weights_start_out.weight_std    0.000000
+          weights_step_50_mlp.0.weight_output_size    0.000000
+              weights_start_out.weight_output_size    0.000000
+                   weights_step_100_out.weight_var    0.000000
+               weights_start_out.weight_input_size    0.000000
+                 weights_end_out.weight_input_size    0.000000
+                 weights_step_200_mlp.1.weight_var    0.000000
+           weights_step_300_out.weight_output_size    0.000000
+               weights_end_mlp.1.weight_input_size    0.000000
+                 weights_step_200_mlp.2.weight_var    0.000000
+            weights_step_500_out.weight_input_size    0.000000
+           weights_step_500_out.weight_output_size    0.000000
+               weights_end_mlp.0.weight_input_size    0.000000
+              weights_end_mlp.0.weight_output_size    0.000000
+                      weights_end_mlp.0.weight_std    0.000000
+         weights_step_200_mlp.2.weight_output_size    0.000000
+                      weights_end_mlp.0.weight_var    0.000000
+              weights_end_mlp.1.weight_output_size    0.000000
+                      weights_end_mlp.2.weight_var    0.000000
+          weights_step_200_mlp.2.weight_input_size    0.000000
+                      weights_end_mlp.1.weight_std    0.000000
+          weights_step_10_mlp.1.weight_output_size    0.000000
+                      weights_end_mlp.1.weight_var    0.000000
+           weights_step_10_mlp.1.weight_input_size    0.000000
+               weights_end_mlp.2.weight_input_size    0.000000
+              weights_end_mlp.2.weight_output_size    0.000000
+                      weights_end_mlp.2.weight_std    0.000000
+          weights_step_50_mlp.2.weight_output_size    0.000000
+
+Execution Time: 37.021 seconds
