@@ -163,4 +163,4 @@ weights_start_mlp.1.weight_frobenius_norm    0.045238
            weights_start_mlp.2.weight_max    0.029152
 weights_start_mlp.2.weight_frobenius_norm    0.027563
 
-Execution Time: 3.581 seconds
+Execution Time: 3.700 seconds

@@ -145,10 +145,15 @@ def main():
             "Std Score": [f"{np.std(val):.4f}" for val in scores.values()]
         })
 
+        mean_std_dict = {}
+        for _, row in mean_std_df.iterrows():
+            mean_std_dict[f"{row['Metric']}_mean"] = float(row['Mean Score'])
+            mean_std_dict[f"{row['Metric']}_std"] = float(row['Std Score'])
+
         # Add to summary table
         summary.append({
             "stage": active_stages[-1], 
-            **{k: np.mean(v) for k, v in scores.items()},
+            **mean_std_dict,
             "time": execution_time
         })
 

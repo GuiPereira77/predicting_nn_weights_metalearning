@@ -78,4 +78,4 @@ weights_step_100_mlp.0.weight_frobenius_norm    0.041319
               weights_step_10_out.weight_std    0.020610
          weights_step_10_mlp.2.weight_median    0.018665
 
-Execution Time: 14.548 seconds
+Execution Time: 12.946 seconds

@@ -112,4 +112,4 @@ weights_step_400_mlp.2.weight_spectral_norm    0.009430
          weights_step_500_mlp.1.weight_mean    0.008653
        weights_step_500_mlp.1.weight_median    0.008427
 
-Execution Time: 24.391 seconds
+Execution Time: 22.621 seconds
