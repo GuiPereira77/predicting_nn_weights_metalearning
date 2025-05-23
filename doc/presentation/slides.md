@@ -108,9 +108,19 @@ hyperparameters = {
   - Evaluate with: Accuracy, ROC AUC, Log Loss, F1 Score.
 - For **Regression**:
   - Use `XGBRFRegressor`.
-  - Evaluate with: MAE, MSE, R².
+  - Evaluate with: MAE, MSE, R², Pearson, Kendall, Spearman.
 
----
+--- 
+
+### **Stagewise Evaluation**
+
+* **Iterative stage evaluation**:
+  * Gradually add weight stats from:
+    * `start`, `step_10`, `step_25`, `step_50`, ..., `step_500`.
+* Results saved for each stage.
+* Summary stored in `stagewise_summary.csv`.
+
+--- 
 
 ### **Cross-Validation**
 - **Perform cross-validation** with `GroupKFold` for each `DATASET_GROUP`.
