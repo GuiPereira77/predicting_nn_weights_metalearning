@@ -78,4 +78,4 @@ weights_step_100_mlp.0.weight_frobenius_norm    0.034467
          weights_step_100_mlp.2.weight_alpha    0.018522
  weights_step_500_mlp.0.weight_spectral_norm    0.017198
 
-Execution Time: 21.746 seconds
+Execution Time: 12.229 seconds

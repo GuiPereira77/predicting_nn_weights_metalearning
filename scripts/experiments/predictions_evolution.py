@@ -94,7 +94,7 @@ def save_results(log_file, df, mean_std_df, all_reports, feature_importance_df, 
         sys.stdout = sys.__stdout__
 
 def main():
-    classification = False  # Set to True for classification mode
+    classification = True  # Set to True for classification mode
 
     # Configuration
     output_dir = os.path.join("scripts", "experiments", "output", f"{'classification' if classification else 'regression'}")
@@ -120,6 +120,7 @@ def main():
     ]
 
     summary = []
+    feature_importance_tracker = {}
 
     for i in range(1, len(stages)+1):
         active_stages = stages[:i]
@@ -161,7 +162,15 @@ def main():
         avg_feature_importance = np.mean(feature_importances, axis=0)
         feature_importance_df = pd.DataFrame({"Feature": X.columns, "Importance": avg_feature_importance})
         feature_importance_df = feature_importance_df.sort_values(by="Importance", ascending=False)
-        feature_importance_df = feature_importance_df.head(10) 
+        feature_importance_df = feature_importance_df.head(10)
+
+        for feat, val in zip(X.columns, avg_feature_importance):
+            if feat not in feature_importance_tracker:
+                feature_importance_tracker[feat] = {}
+            feature_importance_tracker[feat][active_stages[-1]] = val
+
+        importance_df = pd.DataFrame(feature_importance_tracker).T
+        importance_df.to_csv(os.path.join(output_dir, "feature_importance_values.csv"))
 
         # Save results
         log_file = os.path.join(output_dir, active_stages[-1]+".txt")

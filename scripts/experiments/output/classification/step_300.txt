@@ -112,4 +112,4 @@ weights_step_500_mlp.2.weight_spectral_norm    0.015380
           weights_step_200_mlp.0.weight_max    0.007817
 weights_step_500_mlp.1.weight_spectral_norm    0.007794
 
-Execution Time: 20.321 seconds
+Execution Time: 11.259 seconds

@@ -112,4 +112,4 @@ weights_step_500_mlp.2.weight_spectral_norm    0.013924
       weights_step_100_out.weight_alpha_hat    0.008786
        weights_step_10_out.weight_alpha_hat    0.008456
 
-Execution Time: 17.885 seconds
+Execution Time: 9.397 seconds
